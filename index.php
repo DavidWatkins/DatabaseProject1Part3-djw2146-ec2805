@@ -3,20 +3,18 @@
 <head>
   <title>ProjectCurrently</title>
  
-  <%= javascript_include_tag "bootstrap", "data-turbolinks-track" => true %>
-  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
-  <%= stylesheet_link_tag "application.css", media: "all", "data-turbolinks-track" => true %>
+  <script type="text/javascript" src="js/bootstrap.js"></script>
   <%= csrf_meta_tags %>
 </head>
 <body>
 
-	<%= render :partial => "layouts/nav" %>
+	<?php include ('navbar.php');?>
 
 	<div class="container">
 	  <%= yield %>
 	</div>
 
-	<%= render :partial => "layouts/footer" %>
+	<?php include ('footer.php');?>
 
 </body>
 </html>
