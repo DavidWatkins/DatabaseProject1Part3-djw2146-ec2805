@@ -1,3 +1,8 @@
+<?php
+include_once 'php/includes/db_connect.php';
+include_once 'php/includes/functions.php';
+?>
+
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
         <div class="navbar-header">
@@ -11,11 +16,14 @@
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="/projects">Projects</a></li>
-                <li class="active"><a href="/dashboard">Dashboard</a></li>
-                <li class="active"><a href="/logout">Logout</a></li>
-                <li class="active"><a href="/Login">Login</a></li>
-                <li class="active"><a href="/Signup">Sign Up</a></li>
+                <li class="active"><a href="index.php">Projects</a></li>
+                <?php if (login_check($mysqli) == true) : ?>
+                    <li class="active"><a href="profile.php?user_id">Dashboard</a></li>
+                    <li class="active"><a href="/logout">Logout</a></li>
+                <?php else : ?>
+                    <li class="active"><a href="/login.php">Login</a></li>
+                    <li class="active"><a href="/register.php">Sign Up</a></li>
+                <?php endif; ?>
             </ul>
         </div>
     </div>

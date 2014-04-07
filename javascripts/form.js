@@ -15,11 +15,13 @@ function formhash(form, password) {
     form.submit();
 }
 
-function regformhash(form, uid, email, password, conf) {
+function regformhash(form, uid, school, email, password, conf) {
+    
      // Check each field has a value
     if (uid.value == ''         ||
           email.value == ''     ||
           password.value == ''  ||
+          school.value == ''    ||
           conf.value == '') {
 
         alert('You must provide all the requested details. Please try again');
@@ -32,6 +34,16 @@ function regformhash(form, uid, email, password, conf) {
     if(!re.test(form.username.value)) {
         alert("Username must contain only letters, numbers and underscores. Please try again");
         form.username.focus();
+        return false;
+    }
+    
+    //Check the School
+    
+    if(school.value.toLowerCase != 'columbia' && school.value.toLowerCase != 'columbia university' &&
+       school.value.toLowerCase != 'brown' && school.value.toLowerCase != 'brown university' &&
+       school.value.toLowerCase != 'harvard' && school.value.toLowerCase != 'yale university') {
+        alert('School must be Columbia, Harvard, or Brown.');
+        form.school.focus();
         return false;
     }
 

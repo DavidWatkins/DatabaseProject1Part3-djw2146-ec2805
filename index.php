@@ -25,7 +25,20 @@
                 position: relative;
             }
             .project-view img {
-                width:100%;
+                height: 200px;
+                width: 100%;
+                overflow: hidden;
+                text-align: center;
+                vertical-align: center;
+
+                -webkit-transition: all 1s ease;
+                -moz-transition: all 1s ease;
+                -o-transition: all 1s ease;
+                -ms-transition: all 1s ease;
+                transition: all 1s ease;
+            }
+            .project-view img:hover {
+                -webkit-filter: blur(5px);
             }
             .project-view h6 {
                 position: absolute;
@@ -38,7 +51,7 @@
                 letter-spacing: -1px;
                 background: rgb(0, 0, 0); /* fallback color */
                 background: rgba(0, 0, 0, 0.7);
-                padding: 10px;
+                padding: 1px;
             }
             .project-view h2 span.spacer {
                 padding:0 5px;
@@ -49,14 +62,40 @@
 
         <?php include ('php/navbar.php');?>
 
-        <?php
-            $arr = array(array("Funtime Tuesdays", "3.jpg"));
-        ?>
-
         <div class="container">
+
+            <?php
+                //Get list of projects to display
+                //Get all images associated with projects
+                //print out divs for each item in that list
+                //<a href="profile.php?user=<user_id>&<name_tag>
+                //Project array: {"name", "Author", "user_id", "img_id"}
+
+                $projects = array();
+                $index = 0;
+                foreach ($projects as $project) {
+                    if(index % 3 == 0) {
+                        echo "<div class=\"project-row\">";
+                    }
+                    echo "<div class=\"project-view\"><h6><span>";
+                    echo $project[0];
+                    echo "<span class='spacer'></span><br />By: ";
+                    echo $project[1];
+                    echo "</span></h6>";
+
+                    echo "<img src=\"getImage.php?id=" + $project[3] + "\" />";
+                    if(index % 3 == 0) {
+                        echo "</div>";
+                    }
+
+                    $index++;
+                }
+            ?>
+
+
             <div class="project-row">
                 <div class="project-view">
-                    <a href="projects/12">
+                    <a href="project.php">
                         <img src="images/1.png"/>
                         <h6><span>Awesome Project<span class='spacer'></span><br />By: David Watkins</span></h6>
                     </a>
@@ -66,13 +105,13 @@
                     <img src="images/2.JPG" />
                 </div>
                 <div class="project-view">
-                    <h6>Awesome</h6>
+                    <h6><span>Awesome Project<span class='spacer'></span><br />By: David Watkins</span></h6>
                     <img src="images/3.JPG" />
                 </div>
             </div>
             <div class="project-row">
                 <div class="project-view">
-                    <a href="projects/12">
+                    <a href="project.php">
                         <img src="images/1.png"/>
                         <h6><span>Awesome Project<span class='spacer'></span><br />By: David Watkins</span></h6>
                     </a>
@@ -82,10 +121,11 @@
                     <img src="images/2.JPG" />
                 </div>
                 <div class="project-view">
-                    <h6>Awesome</h6>
+                    <h6><span>Awesome Project<span class='spacer'></span><br />By: David Watkins</span></h6>
                     <img src="images/3.JPG" />
                 </div>
             </div>
+
         </div>
 
         <?php include ('php/footer.php');?>
