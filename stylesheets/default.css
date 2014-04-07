@@ -1,5 +1,5 @@
 body {
-    //background: url(<%= asset_path 'background.png' %>) repeat;
+    /* background: url(<%= asset_path 'background.png' %>) repeat; */
 	padding-top: 100px;
 }
 
