@@ -1,0 +1,16 @@
+<?php 
+
+ini_set('display_errors', 'On'); 
+$db = "w4111b.cs.columbia.edu:1521/adb";
+$conn = oci_connect("djw2146", "dudedude", $db); 
+ 
+$stmt = oci_parse($conn, "select projname from projects"); 
+oci_execute($stmt, OCI_DEFAULT);
+while ($res = oci_fetch_row($stmt))
+{
+    echo "User Name: ". $res[0] ;
+}
+ 
+oci_close($conn); 
+?> 
+
