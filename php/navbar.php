@@ -1,6 +1,6 @@
 <?php
-include_once 'php/includes/db_connect.php';
-include_once 'php/includes/functions.php';
+//include_once 'php/includes/db_connect.php';
+//include_once 'php/includes/functions.php';
 ?>
 
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -17,7 +17,7 @@ include_once 'php/includes/functions.php';
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 <li class="active"><a href="index.php">Projects</a></li>
-                <?php if (login_check($mysqli) == true) : ?>
+                <?php if /*(login_check($mysqli)*/ true == true) : ?>
                     <li class="active"><a href="profile.php?user_id">Dashboard</a></li>
                     <li class="active"><a href="/logout">Logout</a></li>
                 <?php else : ?>
