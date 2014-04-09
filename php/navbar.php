@@ -21,6 +21,12 @@
             <ul class="nav navbar-nav">
                 <li class="active"><a href="index.php">Projects</a></li>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+                <?php if /*(login_check($mysqli)*/ true == true) : ?>
+>>>>>>> 391de013534262f237c5aca0a8812693f08e6c6e
+||||||| merged common ancestors
+                <?php if (login_check($mysqli) == true) : ?>
 =======
                 <?php if /*(login_check($mysqli)*/ true == true) : ?>
 >>>>>>> 391de013534262f237c5aca0a8812693f08e6c6e
