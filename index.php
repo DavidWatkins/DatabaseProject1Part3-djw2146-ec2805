@@ -79,8 +79,8 @@
                     echo "<a href='profile.php?username=$project[1]'>" .$project[1] . "</a>\n";
                     echo "</span></h6>\n";
                     echo "<img src=\"images/1.png\" />\n";
-                    echo "</div>\n";
-                    if($index % 3 == 0) {
+                    echo "</div>";
+                    if($index % 3 == 2) {
                         echo "</div>";
                     }
 
@@ -90,43 +90,5 @@
             ?>
         </div>
         <?php include ('php/footer.php');?>
-
-
-        <!--
-            <div class="project-row">
-                <div class="project-view">
-                    <a href="project.php">
-                        <img src="images/1.png"/>
-                        <h6><span>Awesome Project<span class='spacer'></span><br />By: David Watkins</span></h6>
-                    </a>
-                </div>
-                <div class="project-view">
-                    <h6><span>Awesome Project<span class='spacer'></span><br />By: David Watkins</span></h6>
-                    <img src="images/2.JPG" />
-                </div>
-                <div class="project-view">
-                    <h6><span>Awesome Project<span class='spacer'></span><br />By: David Watkins</span></h6>
-                    <img src="images/3.JPG" />
-                </div>
-            </div>
-            <div class="project-row">
-                <div class="project-view">
-                    <a href="project.php">
-                        <img src="images/1.png"/>
-                        <h6><span>Awesome Project<span class='spacer'></span><br />By: David Watkins</span></h6>
-                    </a>
-                </div>
-                <div class="project-view">
-                    <h6><span>Awesome Project<span class='spacer'></span><br />By: David Watkins</span></h6>
-                    <img src="images/2.JPG" />
-                </div>
-                <div class="project-view">
-                    <h6><span>Awesome Project<span class='spacer'></span><br />By: David Watkins</span></h6>
-                    <img src="images/3.JPG" />
-                </div>
-            </div>
-
-            -->
-        </div>
     </body>
 </html>
