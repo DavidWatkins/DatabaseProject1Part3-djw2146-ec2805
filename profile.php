@@ -39,11 +39,9 @@ $profile_pic = $user[2];
         </style>
     </head>
     <body>
-        <?php include ('php/navbar.php'); ?>
-
         <div class="content user_info">
             <h3><?php echo $name; ?></h3>
-            <img src="<?php echo $profile_pic; ?>" />
+            <img src="images/1.png" />
             <h5>School: <?php echo $school;?></h5>
             <h4>Owned Projects: </h4>
             <ul>
@@ -54,6 +52,6 @@ $profile_pic = $user[2];
             <ul><?php foreach($involved_projects as $project) { echo "<li>" . $project . "</li>"; } ?></ul>
         </div>
     </div>
-    <?php include ('php/footer.php'); ?>
+
 </body>
 </html>

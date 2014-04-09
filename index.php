@@ -37,9 +37,10 @@
                 -ms-transition: all 1s ease;
                 transition: all 1s ease;
             }
+            <!--
             .project-view img:hover {
                 -webkit-filter: blur(5px);
-            }
+            }-->
             .project-view h6 {
                 position: absolute;
                 top: 70%;
@@ -59,8 +60,7 @@
         </style>
     </head>
     <body>
-        <?php include('php/navbar.php');?>
-        
+       
         <div class="container">
             <?php
                 $index = 0;
@@ -74,10 +74,12 @@
                         echo "<div class=\"project-row\">";
                     }
                     echo "<div class=\"project-view\">\n<h6><span>";
+                    echo "<div>";
                     echo "<a href='project.php?projname=$project[0]'>" . $project[0] . "</a>";
                     echo "<span class='spacer'></span><br />\nBy: ";
                     echo "<a href='profile.php?username=$project[1]'>" .$project[1] . "</a>\n";
                     echo "</span></h6>\n";
+                    echo "</div>";
                     echo "<img src=\"images/1.png\" />\n";
                     echo "</div>";
                     if($index % 3 == 2) {
@@ -89,6 +91,6 @@
                 oci_close($conn);
             ?>
         </div>
-        <?php include ('php/footer.php');?>
+
     </body>
 </html>
