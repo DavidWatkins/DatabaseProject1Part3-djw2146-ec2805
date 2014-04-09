@@ -27,16 +27,17 @@ if (isset($_POST['name'], $_POST['email'], $_POST['school'], $_POST['password'])
     // breaking these rules.
     //
 
-    $stmt = oci_parse($mysqli, "select email from USERS where email = " . $email . "LIMIT 1");
+    $stmt = oci_parse($mysqli, "select email from USERS where email = '" . $email . "'");
+    //oci_bind_by_name($stmt, ':email', $email);
+    $r = oci_execute($stmt);
 
-    if ($stmt) {
-        oci_execute($stmt, OCI_DEFAULT);
+    if ($r) {
         $count = 0;
-        while(oci_fetch($stmt)) {
+        while($user = oci_fetch_row($stmt)) {
             $count++;
         }
 
-        if ($count == 1) {
+        if ($count > 0) {
             // A user with this email address already exists
             $error_msg .= '<p class="error">A user with this email address already exists.</p>';
         }
