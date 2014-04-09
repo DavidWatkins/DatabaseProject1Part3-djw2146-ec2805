@@ -39,12 +39,14 @@
             }
             .project-view img:hover {
                 -webkit-filter: blur(5px);
+                z-index: 0;
             }
             .project-view h6 {
                 position: absolute;
                 top: 70%;
                 left: 0;
                 width: 100%;
+                z-index: 9;
             }
             .project-view h6 span{
                 color: white;
@@ -52,9 +54,11 @@
                 background: rgb(0, 0, 0); /* fallback color */
                 background: rgba(0, 0, 0, 0.7);
                 padding: 1px;
+                z-index: 9;
             }
             .project-view h2 span.spacer {
                 padding:0 5px;
+                z-index: 9;
             }
         </style>
     </head>
@@ -67,7 +71,7 @@
                 ini_set('display_errors', 'On');
                 $db = "w4111b.cs.columbia.edu:1521/adb";
                 $conn = oci_connect("djw2146", "dudedude", $db);
-                $stmt = oci_parse($conn, "select projname, username from projects"); 
+                $stmt = oci_parse($conn, "select projname, user_email from projects");
                 oci_execute($stmt, OCI_DEFAULT);
                 while ($project = oci_fetch_row($stmt)) {
                    if($index % 3 == 0) {
@@ -76,7 +80,7 @@
                     echo "<div class=\"project-view\">\n<h6><span>";
                     echo "<a href='project.php?projname=$project[0]'>" . $project[0] . "</a>";
                     echo "<span class='spacer'></span><br />\nBy: ";
-                    echo "<a href='profile.php?username=$project[1]'>" .$project[1] . "</a>\n";
+                    echo "<a href='profile.php?email=$project[1]'>" .$project[1] . "</a>\n";
                     echo "</span></h6>\n";
                     echo "<img src=\"images/1.png\" />\n";
                     echo "</div>";

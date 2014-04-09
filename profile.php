@@ -1,9 +1,9 @@
 <?php
-$name = $_GET["username"];
+$email = $_GET["email"];
 ini_set('display_errors', 'On');
 $db = "w4111b.cs.columbia.edu:1521/adb";
 $conn = oci_connect("djw2146", "dudedude", $db);
-$stmt = oci_parse($conn, "select email, school, photo from users where username = '$name'");
+$stmt = oci_parse($conn, "select email, school, photo from users where username = '$email'");
 oci_execute($stmt, OCI_DEFAULT);
 $user = oci_fetch_row($stmt);
 echo $user[0];
