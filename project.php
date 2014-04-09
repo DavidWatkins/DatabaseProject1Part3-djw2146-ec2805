@@ -4,7 +4,7 @@ $img_src = "images/1.png";
 $pub_links = array("www.google.com", "www.yahoo.com", "www.bing.com");
 $likes = 4;
 $updates = array(array("Awesome Update", "10/22/2013", "So excited to get this project going"));
-$support_requests = array(array());
+$support_requests = array(array("ghe"));
 ?>
 
 <html>
@@ -66,7 +66,7 @@ $support_requests = array(array());
 
     </head>
     <body>
-        <?php include ('php/navbar.php'); ?>
+        <!-- <?php include ('php/navbar.php'); ?> -->
 
         <div class="content projinfo" id="projectInfo">
             <ul>         
@@ -111,6 +111,7 @@ foreach($pub_links as $link) {
                     echo $support_request[0];
                     echo "</div>";
                 }
+?>
         </div>
 
         <div id="respond" class="projinfo">
