@@ -1,9 +1,18 @@
 <?php
-$name = "David Watkins";
+$name = $_GET["username"];
+ini_set('display_errors', 'On');
+$db = "w4111b.cs.columbia.edu:1521/adb";
+$conn = oci_connect("djw2146", "dudedude", $db);
+$stmt = oci_parse($conn, "select email, school, photo from users where username = '$name'");
+oci_execute($stmt, OCI_DEFAULT);
+$user = oci_fetch_row($stmt);
+echo $user[0];
+echo $user[1];
 $owned_projects = array("Awesome project");
 $involved_projects = array("poker chips", "teapot");
-$school = "Columbia";
-$profile_pic = "images/2.jpg";
+$email = $user[0];
+$school = $user[1];
+$profile_pic = $user[2];
 ?>
 
 <html>

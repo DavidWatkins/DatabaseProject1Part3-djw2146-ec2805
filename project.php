@@ -4,6 +4,7 @@ $img_src = "images/1.png";
 $pub_links = array("www.google.com", "www.yahoo.com", "www.bing.com");
 $likes = 4;
 $updates = array(array("Awesome Update", "10/22/2013", "So excited to get this project going"));
+$support_requests = array(array());
 ?>
 
 <html>
@@ -100,6 +101,16 @@ foreach($pub_links as $link) {
             
             ?>
         
+        </div>
+
+        <div id="support_requests" class="projinfo">
+            <h4>support requests</h4>
+            <?php
+                foreach($support_requests as $support_request) {
+                    echo "<div>";
+                    echo $support_request[0];
+                    echo "</div>";
+                }
         </div>
 
         <div id="respond" class="projinfo">
