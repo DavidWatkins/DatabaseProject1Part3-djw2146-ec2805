@@ -6,9 +6,6 @@ $conn = oci_connect("djw2146", "dudedude", $db);
 $stmt = oci_parse($conn, "select email, school, photo from users where username = '$name'");
 oci_execute($stmt, OCI_DEFAULT);
 $user = oci_fetch_row($stmt);
-echo $user[0];
-echo $user[1];
-$owned_projects = array("Awesome project");
 $involved_projects = array("poker chips", "teapot");
 $email = $user[0];
 $school = $user[1];
@@ -43,13 +40,39 @@ $profile_pic = $user[2];
             <h3><?php echo $name; ?></h3>
             <img src="images/1.png" />
             <h5>School: <?php echo $school;?></h5>
+            <h5>Email: <?php echo $email;?></h5>
             <h4>Owned Projects: </h4>
             <ul>
-                <?php foreach($owned_projects as $project) { echo "<li>" . $project . "</li>"; } ?>
-            </ul>
-            
+            <?php
+
+                $stmt = oci_parse($conn, "select projname from projects where username = '$name'");
+                oci_execute($stmt, OCI_DEFAULT); 
+            while ($owned_project = oci_fetch_row($stmt)) { 
+                echo "<li>" . $owned_project[0] . "</li>";
+            }
+            ?>
+            </ul> 
             <h4>Involved Projects: </h4>
-            <ul><?php foreach($involved_projects as $project) { echo "<li>" . $project . "</li>"; } ?></ul>
+            <ul>
+            <?php
+                $stmt = oci_parse($conn, "select projname from team_memberships where username = '$name'");
+                oci_execute($stmt, OCI_DEFAULT); 
+            while ($memberof_project = oci_fetch_row($stmt)) { 
+                echo "<li>" . $memberof_project[0] . "</li>";
+            }
+            ?>
+            </ul>
+            <h4>Liked Projects: </h4>
+            <ul>
+            <?php
+                $stmt = oci_parse($conn, "select projname from likes where username = '$name'");
+                oci_execute($stmt, OCI_DEFAULT); 
+            while ($liked_project = oci_fetch_row($stmt)) {
+                echo "<li>" . $liked_project[0] . "</li>";
+            }
+            ?>
+            </ul>
+
         </div>
     </div>
 

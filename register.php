@@ -7,7 +7,7 @@ include_once 'php/includes/functions.php';
     <head>
         <meta charset="UTF-8">
         <title>Secure Login: Registration Form</title>
-        <<script type="text/javascript" src="javascripts/form.js"></script>
+        <script type="text/javascript" src="javascripts/form.js"></script>
         <script type="text/javascript" src="javascripts/sha512.js"></script>
         <script type="text/javascript" src="javascripts/jquery-2.1.0.min.js"></script>
         <script type="text/javascript" src="javascripts/bootstrap.js"></script>
@@ -16,7 +16,7 @@ include_once 'php/includes/functions.php';
         <link rel="stylesheet" type="text/css" href="stylesheets/forms.css" />
     </head>
     <body>
-        <?php include ('php/navbar.php');?>
+
         <?php
 if (!empty($error_msg)) {
     echo $error_msg;
