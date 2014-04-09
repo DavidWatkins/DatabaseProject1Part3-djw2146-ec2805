@@ -65,70 +65,34 @@
         <div class="container">
 
             <?php
-                //Get list of projects to display
-                //Get all images associated with projects
-                //print out divs for each item in that list
-                //<a href="profile.php?user=<user_id>&<name_tag>
-                //Project array: {"name", "Author", "user_id", "img_id"}
-
-                $projects = array();
                 $index = 0;
-                foreach ($projects as $project) {
-                    if(index % 3 == 0) {
+                ini_set('display_errors', 'On');
+                $db = "w4111b.cs.columbia.edu:1521/adb";
+                $conn = oci_connect("djw2146", "dudedude", $db);
+                $stmt = oci_parse($conn, "select projname, username from projects"); 
+                oci_execute($stmt, OCI_DEFAULT);
+                while ($project = oci_fetch_row($stmt)) {
+                   if($index % 3 == 0) {
                         echo "<div class=\"project-row\">";
                     }
                     echo "<div class=\"project-view\"><h6><span>";
-                    echo $project[0];
+                    echo "<a href='project.php?projname=$project[0]'>" . $project[0] . "</a>";
                     echo "<span class='spacer'></span><br />By: ";
-                    echo $project[1];
+                    echo "<a href='profile.php?username=$project[1]'>" .$project[1] . "</a>";
                     echo "</span></h6>";
-
+                    /*
                     echo "<img src=\"getImage.php?id=" + $project[3] + "\" />";
-                    if(index % 3 == 0) {
+                     */
+                    if($index % 3 == 0) {
                         echo "</div>";
                     }
 
                     $index++;
                 }
+                oci_close($conn);
             ?>
 
-
-            <div class="project-row">
-                <div class="project-view">
-                    <a href="project.php">
-                        <img src="images/1.png"/>
-                        <h6><span>Awesome Project<span class='spacer'></span><br />By: David Watkins</span></h6>
-                    </a>
-                </div>
-                <div class="project-view">
-                    <h6><span>Awesome Project<span class='spacer'></span><br />By: David Watkins</span></h6>
-                    <img src="images/2.JPG" />
-                </div>
-                <div class="project-view">
-                    <h6><span>Awesome Project<span class='spacer'></span><br />By: David Watkins</span></h6>
-                    <img src="images/3.JPG" />
-                </div>
-            </div>
-            <div class="project-row">
-                <div class="project-view">
-                    <a href="project.php">
-                        <img src="images/1.png"/>
-                        <h6><span>Awesome Project<span class='spacer'></span><br />By: David Watkins</span></h6>
-                    </a>
-                </div>
-                <div class="project-view">
-                    <h6><span>Awesome Project<span class='spacer'></span><br />By: David Watkins</span></h6>
-                    <img src="images/2.JPG" />
-                </div>
-                <div class="project-view">
-                    <h6><span>Awesome Project<span class='spacer'></span><br />By: David Watkins</span></h6>
-                    <img src="images/3.JPG" />
-                </div>
-            </div>
-
-        </div>
-
         <?php include ('php/footer.php');?>
-
+        </div>
     </body>
 </html>
