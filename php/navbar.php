@@ -1,8 +1,11 @@
+<<<<<<< HEAD
+=======
 <?php
 //include_once 'php/includes/db_connect.php';
 //include_once 'php/includes/functions.php';
 ?>
 
+>>>>>>> 391de013534262f237c5aca0a8812693f08e6c6e
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
         <div class="navbar-header">
@@ -17,13 +20,20 @@
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 <li class="active"><a href="index.php">Projects</a></li>
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
                 <?php if /*(login_check($mysqli)*/ true == true) : ?>
+>>>>>>> 391de013534262f237c5aca0a8812693f08e6c6e
+||||||| merged common ancestors
+                <?php if (login_check($mysqli) == true) : ?>
+=======
+                <?php if /*(login_check($mysqli)*/ true == true) : ?>
+>>>>>>> 391de013534262f237c5aca0a8812693f08e6c6e
                     <li class="active"><a href="profile.php?user_id">Dashboard</a></li>
                     <li class="active"><a href="/logout">Logout</a></li>
-                <?php else : ?>
                     <li class="active"><a href="/login.php">Login</a></li>
                     <li class="active"><a href="/register.php">Sign Up</a></li>
-                <?php endif; ?>
             </ul>
         </div>
     </div>

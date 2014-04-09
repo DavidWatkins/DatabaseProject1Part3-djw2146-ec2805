@@ -59,11 +59,9 @@
         </style>
     </head>
     <body>
-
-        <?php include ('php/navbar.php');?>
-
+        <?php include('php/navbar.php');?>
+        
         <div class="container">
-
             <?php
                 $index = 0;
                 ini_set('display_errors', 'On');
@@ -75,15 +73,14 @@
                    if($index % 3 == 0) {
                         echo "<div class=\"project-row\">";
                     }
-                    echo "<div class=\"project-view\"><h6><span>";
+                    echo "<div class=\"project-view\">\n<h6><span>";
                     echo "<a href='project.php?projname=$project[0]'>" . $project[0] . "</a>";
-                    echo "<span class='spacer'></span><br />By: ";
-                    echo "<a href='profile.php?username=$project[1]'>" .$project[1] . "</a>";
-                    echo "</span></h6>";
-                    /*
-                    echo "<img src=\"getImage.php?id=" + $project[3] + "\" />";
-                     */
-                    if($index % 3 == 0) {
+                    echo "<span class='spacer'></span><br />\nBy: ";
+                    echo "<a href='profile.php?username=$project[1]'>" .$project[1] . "</a>\n";
+                    echo "</span></h6>\n";
+                    echo "<img src=\"images/1.png\" />\n";
+                    echo "</div>";
+                    if($index % 3 == 2) {
                         echo "</div>";
                     }
 
@@ -91,8 +88,7 @@
                 }
                 oci_close($conn);
             ?>
-
-        <?php include("$_SERVER[DOCUMENT_ROOT]/DatabaseProject1Part3-djw2146-ec2805/php/footer.php");?>
         </div>
+        <?php include ('php/footer.php');?>
     </body>
 </html>
