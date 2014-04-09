@@ -52,18 +52,20 @@ if (isset($_POST['name'], $_POST['email'], $_POST['school'], $_POST['password'])
 
     if (empty($error_msg)) {
         // Insert the new user into the database
-        $insert_statement = "INSERT INTO USERS (username, email, password, school) VALUES (" . $name . ", " . $email . ", " . $password . ", " . $school . ")";
-        $stmt = oci_parse($mysqli, $insert_statement);
-        if ($stmt) {
-            $r = oci_execute($stmt, OCI_DEFAULT);
-            if (!$r) {
-                header('Location: ../error.php?err=Registration failure: INSERT');
-            }
-            header('Location: ./register_success.php');
+        $stid = oci_parse($mysqli, 'INSERT INTO USERS (name, email, password, school) VALUES(:name, :email, :password, :school)');
 
+        oci_bind_by_name($stid, ':name', $name);
+        oci_bind_by_name($stid, ':email', $email);
+        oci_bind_by_name($stid, ':password', $password);
+        oci_bind_by_name($stid, ':school', $school);
+
+        $r = oci_execute($stid);  // executes and commits
+
+        if ($r) {
+            header('Location: ./register_success.php');
         }
         else {
-            $error_msg ="Error creating statement";
+            oci_bind_by_name($stid, ':password', $password);
         }
     }
 }
