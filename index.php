@@ -69,7 +69,7 @@
                 ini_set('display_errors', 'On');
                 $db = "w4111b.cs.columbia.edu:1521/adb";
                 $conn = oci_connect("djw2146", "dudedude", $db);
-                $stmt = oci_parse($conn, "select projname, username from projects"); 
+                $stmt = oci_parse($conn, "select projname, username from projects order by date_created desc"); 
                 oci_execute($stmt, OCI_DEFAULT);
                 while ($project = oci_fetch_row($stmt)) {
                    if($index % 3 == 0) {
@@ -92,7 +92,7 @@
                 oci_close($conn);
             ?>
 
-        <?php include ('php/footer.php');?>
+        <?php include("$_SERVER[DOCUMENT_ROOT]/DatabaseProject1Part3-djw2146-ec2805/php/footer.php");?>
         </div>
     </body>
 </html>
