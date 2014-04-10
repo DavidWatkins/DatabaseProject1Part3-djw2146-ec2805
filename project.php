@@ -166,11 +166,13 @@ while ($pub_link = oci_fetch_row($stmt)) {
 $stmt = oci_parse($mysqli, "select count(*) from likes where projname = '$projname'");
 oci_execute($stmt, OCI_DEFAULT);
 $num_likes = oci_fetch_row($stmt);
-            ?>  
+?>
             <h5>Likes: <?php echo $num_likes[0];?></h5>
+<?php if (login_check($mysqli) == true) : ?>
 <form action="" name="likes" method="post">
             <input type="submit" name="liked" value="like"/>
 </form>
+<?php endif;?>
         </div>
 
         <div id="support_requests" class="projinfo">
