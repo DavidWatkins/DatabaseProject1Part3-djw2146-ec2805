@@ -11,7 +11,7 @@
 
         <script>
 
-            var count=0;
+            var support_count=0;
             $(document).ready(function () {
                 $('#addSupportRequest').on('click', function (e) {
                     var form = "<p>\
