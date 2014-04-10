@@ -1,9 +1,18 @@
 <?php
-
+include_once 'php/includes/functions.php';
 $projname = $_GET["projname"];
 ini_set('display_errors', 'On');
 $db = "w4111b.cs.columbia.edu:1521/adb";
 $conn = oci_connect("djw2146", "dudedude", $db);
+
+if (!empty($_POST['comment'])) {
+    $comment = $_POST['comment'];
+    /*
+    sec_session_start();
+    $logged_in_user = _$SESSION['email'];
+    echo $logged_in_user;
+     */
+}
 
 if (!empty($_POST['amount'])) { 
     $amount_contributed = $_POST['amount']; 
@@ -276,7 +285,7 @@ $img_src = "images/1.png";
                     echo "<div class=\"update\">";
                     echo "<p>$comment[0]</p>";
                     echo "<p>$comment[1]</p>";//comment content
-                    echo "<a href='profile.php?email=$comment[2]'>$user[0]</p>";
+                    echo "<a href='profile.php?email=$comment[2]'>$user[0]</a></p>";
                     echo "</div>";
                 }
             ?>
@@ -284,29 +293,20 @@ $img_src = "images/1.png";
 
         </div>
 
-        <div id="respond" class="projinfo">
 
-            <h3>Leave a Comment</h3>
-
-            <form action="post_comment.php" method="post" id="commentform">
-
-                <label for="comment_author" class="required">Your name</label>
-                <input type="text" name="comment_author" id="comment_author" value="" tabindex="1" required="required">
-
-                <label for="email" class="required">Your email;</label>
-                <input type="email" name="email" id="email" value="" tabindex="2" required="required">
-
-                <label for="comment" class="required">Your message</label>
-                <textarea name="comment" id="comment" rows="10" tabindex="4"	 required="required"></textarea>
-
-                <-- comment_post_ID value hard-coded as 1 -->
-                    <input type="hidden" name="comment_post_ID" value="1" id="comment_post_ID" />
-                    <input name="submit" type="submit" value="Submit comment" />
-
+<?php
+    if (login_check($conn)) {
+                echo "
+    <div id='respond' class='projinfo'>
+        <h3>Leave a Comment</h3>
+            <form action='' method='post' name='comment'>
+                <label for='comment' class='required'>Your message</label>
+                <textarea name='comment' rows='10' tabindex='4' required='required'></textarea>
+                <input name='submit' type='submit' value='Submit comment' onclick='return okayToSubmit(this.form)' />
                 </form>
-
-            </div>
-
+                </div>";
+}
+?>
             <?php include ('php/footer.php'); ?>
         </body>
     </html>
