@@ -63,7 +63,7 @@ if (isset($_POST['quantity'])) {
     oci_execute($stmt, OCI_DEFAULT);
 }
 
-$stmt = oci_parse($mysqli, "select email, description, date_created, user_email from projects where projname = '$projname'");
+$stmt = oci_parse($mysqli, "select email, description, date_created, trim(user_email) from projects where projname = '$projname'");
 oci_execute($stmt, OCI_DEFAULT);
 $project = oci_fetch_row($stmt);
 $project_email = $project[0];
@@ -310,7 +310,7 @@ while ($update = oci_fetch_row($stmt)) {
         </div>  <!-- updates -->
         <?php if ((login_check($mysqli) == true) && ($_SESSION['email'] == $owner_email)) : ?>
         <div id='respond' class='projinfo'>
-            <h3>Create an Update - <?php echo $owner_email . " " . $user_email; ?></h3>
+            <h3>Create an Update</h3>
             <form action='<?php echo basename($_SERVER['PHP_SELF']) . "?" . $_SERVER['QUERY_STRING']; ?>' method='post' name='comment'>
                 <label for='update' class='required'>Update Message: </label>
                 <textarea name='update' rows='10' tabindex='4' required='required'></textarea>
