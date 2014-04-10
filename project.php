@@ -19,12 +19,16 @@ if (!empty($_POST['amount'])) {
 }
 
 if (!empty($_POST['quantity'])) {
-    echo "quantity";
-    /*
     $quantity_contributed = $_POST['quantity'];
-    $stmt = oci_parse($conn, "select email, description, date_created, user_email from projects where projname = '$projname'");
+    $stmt = oci_parse($conn, "select quantity, percent_fulfilled from support_requests natural join food_requests where projname = '$projname'");
     oci_execute($stmt, OCI_DEFAULT);
-     */
+    $food_request_info = oci_fetch_row($stmt);
+    $food_requested = $food_request_info[0];
+    $food_fulfilled = $food_request_info[1];
+    $total_food = $quantity_contributed + $food_requested * $food_fulfilled;
+    $updated_percent_fulfilled = $total_food / $food_requested;
+    $stmt = oci_parse($conn, "update support_requests set percent_fulfilled = $updated_percent_fulfilled where projname = '$projname' and category='food'");
+    oci_execute($stmt, OCI_DEFAULT);
 }
 
 $stmt = oci_parse($conn, "select email, description, date_created, user_email from projects where projname = '$projname'");
