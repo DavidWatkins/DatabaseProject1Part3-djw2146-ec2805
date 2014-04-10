@@ -156,7 +156,6 @@ if (isset($_POST['ProjectName'], $_POST['email'], $_POST['ProjectDescription'], 
             }
         }
 
-        $error_msg .= 'Link count: ' . $link_count;
         for($i = 0; $i <= $link_count; $i++) {
             $PLName = $_POST['PLName' . (string)$i];
             $PLURL = $_POST['PLURL' . (string)$i];

@@ -17,7 +17,7 @@ if(!empty($_POST['update'])) {
     
     $stid = oci_parse($mysqli, "INSERT INTO Updates (projname, content, timestamp) VALUES(:projname, :content, current_timestamp)");
     oci_bind_by_name($stid, ':projname', $projname);
-    oci_bind_by_name($stid, ':content', $content);
+    oci_bind_by_name($stid, ':content', $update);
     $r = oci_execute($stid);  // executes and commits
 }
 
