@@ -113,17 +113,34 @@ $img_src = "images/1.png";
         <div class="projinfo">
             <h3>Updates</h3>
             <?php
-                foreach($updates as $update) {
+            $stmt = oci_parse($conn, "select timestamp, content from updates where projname = '$projname'");
+            oci_execute($stmt, OCI_DEFAULT);
+            while ($update = oci_fetch_row($stmt)) { 
                     echo "<div class=\"update\">";
-                    echo "<h5>" . $update[0] . " - " . $update[1] . "</h5>";//Name of update
-                    echo "<br />";
-                    echo $update[2];//Update content
+                    echo "<p>$update[0]</p>";
+                    echo "<p>" . $update[1]->load() . "</p>";//Update content
+                    echo "</div>";
+                } 
+            ?>
+        </div>  <!-- updates -->
+
+        <div class="projinfo">
+            <h3>Comments</h3>
+            <?php
+            $stmt = oci_parse($conn, "select timestamp, content, user_email from comments where projname = '$projname'");
+            oci_execute($stmt, OCI_DEFAULT);
+            while ($comment = oci_fetch_row($stmt)) {
+                    $stmt = oci_parse($conn, "select name from users where email = '$comment[2]'");
+                    oci_execute($stmt, OCI_DEFAULT);
+                    $user = oci_fetch_row($stmt);
+                    echo "<div class=\"update\">";
+                    echo "<p>$comment[0]</p>";
+                    echo "<p>$comment[1]</p>";//comment content
+                    echo "<a href='profile.php?email=$comment[2]'>$user[0]</p>";
                     echo "</div>";
                 }
-            
             ?>
-        
-        </div>
+        </div>  <!-- updates -->
 
         <div id="support_requests" class="projinfo">
             <h4>support requests</h4>
