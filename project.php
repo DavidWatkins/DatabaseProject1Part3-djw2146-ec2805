@@ -7,7 +7,6 @@ include_once ('php/includes/functions.php');
 sec_session_start();
 
 $user_email = $_SESSION['email'];
-echo $user_email;
 
 $projname = $_GET["projname"];
 $projname = urldecode($projname);
@@ -167,13 +166,13 @@ while ($pub_link = oci_fetch_row($stmt)) {
 $stmt = oci_parse($mysqli, "select count(*) from likes where projname = '$projname'");
 oci_execute($stmt, OCI_DEFAULT);
 $num_likes = oci_fetch_row($stmt);
-?>
+            ?>
             <h5>Likes: <?php echo $num_likes[0];?></h5>
-<?php if (login_check($mysqli) == true) : ?>
-<form action="" name="likes" method="post">
-            <input type="submit" name="liked" value="like"/>
-</form>
-<?php endif;?>
+            <?php if (login_check($mysqli) == true) : ?>
+            <form action="" name="likes" method="post">
+                <input type="submit" name="liked" value="like"/>
+            </form>
+            <?php endif;?>
         </div>
 
         <div id="support_requests" class="projinfo">
@@ -193,11 +192,11 @@ if ($help_request) {
     echo "</div>"; 
 }
             ?>
-<?php if (login_check($mysqli) == true) : ?>
+            <?php if (login_check($mysqli) == true) : ?>
             <form action="" method="post"> 
                 <p><input type="submit" value="I'm interested" onclick="alert('Email the project owner to discuss the role.');"/></p>
             </form>
-<?php endif;?>
+            <?php endif;?>
             <?php
 $stmt = oci_parse($mysqli, "select description, amount, percent_fulfilled, IS_ALL_OR_NOTHING from support_requests natural join money_requests where percent_fulfilled < 1 and projname = '$projname'"); 
 oci_execute($stmt, OCI_DEFAULT);
@@ -220,13 +219,13 @@ if ($money_request) {
     echo "All or nothing? " . $is_all_nothing;
     echo "</div>";
 }
-?>
-<?php if (login_check($mysqli) == true) : ?>
+            ?>
+            <?php if (login_check($mysqli) == true) : ?>
             <form action="" method="post" name="money">
                 <p>Amount: $<input type="text" name="amount" /></p>
                 <p><input type="submit" value="Contribute" /></p></form>
-<?php endif;?>
-<?php
+            <?php endif;?>
+            <?php
 $stmt = oci_parse($mysqli, "select description, percent_fulfilled, item, quantity from support_requests natural join food_requests where percent_fulfilled < 1 and projname = '$projname'"); 
 oci_execute($stmt, OCI_DEFAULT);
 $food_request = oci_fetch_row($stmt);
@@ -243,13 +242,12 @@ if ($food_request) {
     echo "</div>";
 }
             ?>
-<?php if (login_check($mysqli) == true) : ?>
+            <?php if (login_check($mysqli) == true) : ?>
             <form action="" name="food" method="post">
                 <p>Quantity: <input type="text" name="quantity" /></p>
                 <p><input type="submit" value="Contribute" /></p></form>
-
+            <?php endif;?>
         </div>
-<?php endif;?>
         <div id="support_requests" class="projinfo">
             <h4>Thanks to the contributors who are helping us get there:</h4>
 
@@ -293,10 +291,10 @@ if ($food_request) {
     echo "</div>";
 }
             ?>
-            </div>
-            <div class="projinfo">
-                <h3>Updates</h3>
-                <?php
+        </div>
+        <div class="projinfo">
+            <h3>Updates</h3>
+            <?php
 $stmt = oci_parse($mysqli, "select timestamp, content from updates where projname = '$projname'");
 oci_execute($stmt, OCI_DEFAULT);
 while ($update = oci_fetch_row($stmt)) { 
@@ -305,26 +303,26 @@ while ($update = oci_fetch_row($stmt)) {
     echo "<p>" . $update[1] . "</p>";//Update content
     echo "</div>";
 } 
-                ?>
+            ?>
 
 
 
-            </div>  <!-- updates -->
-            <?php if ((login_check($mysqli) == true) && ($_SESSION['email'] == $owner_email)) : ?>
-            <div id='respond' class='projinfo'>
-                <h3>Create an Update - <?php echo $owner_email . " " . $user_email; ?></h3>
-                <form action='<?php echo basename($_SERVER['PHP_SELF']) . "?" . $_SERVER['QUERY_STRING']; ?>' method='post' name='comment'>
-                    <label for='update' class='required'>Update Message: </label>
-                    <textarea name='update' rows='10' tabindex='4' required='required'></textarea>
-                    <input name='submit' type='submit' value='Submit comment' />
-                </form>
-            </div>";
+        </div>  <!-- updates -->
+        <?php if ((login_check($mysqli) == true) && ($_SESSION['email'] == $owner_email)) : ?>
+        <div id='respond' class='projinfo'>
+            <h3>Create an Update - <?php echo $owner_email . " " . $user_email; ?></h3>
+            <form action='<?php echo basename($_SERVER['PHP_SELF']) . "?" . $_SERVER['QUERY_STRING']; ?>' method='post' name='comment'>
+                <label for='update' class='required'>Update Message: </label>
+                <textarea name='update' rows='10' tabindex='4' required='required'></textarea>
+                <input name='submit' type='submit' value='Submit comment' />
+            </form>
+        </div>";
 
-            <?php endif;?>
+        <?php endif;?>
 
-            <div class="projinfo">
-                <h3>Comments</h3>
-                <?php
+        <div class="projinfo">
+            <h3>Comments</h3>
+            <?php
 $stmt = oci_parse($mysqli, "select timestamp, content, user_email from comments where projname = '$projname'");
 oci_execute($stmt, OCI_DEFAULT);
 while ($comment = oci_fetch_row($stmt)) {
@@ -337,25 +335,25 @@ while ($comment = oci_fetch_row($stmt)) {
     echo "<a href='profile.php?email=$comment[2]'>$user[0]</a></p>";
     echo "</div>";
 }
-                ?>
-            </div>  <!-- Comments -->
+            ?>
+        </div>  <!-- Comments -->
 
-        </div>
+    </div>
 
 
-        <?php if (login_check($mysqli) == true) : ?>
-        <div id='respond' class='projinfo'>
-            <h3>Leave a Comment</h3>
-            <form action='<?php echo basename($_SERVER['PHP_SELF']) . "?" . $_SERVER['QUERY_STRING']; ?>' method='post' name='comment'>
-                <label for='comment' class='required'>Your message</label>
-                <textarea name='comment' rows='10' tabindex='4' required='required'></textarea>
-                <input name='submit' type='submit' value='Submit comment' />
-            </form>
-        </div>";
+    <?php if (login_check($mysqli) == true) : ?>
+    <div id='respond' class='projinfo'>
+        <h3>Leave a Comment</h3>
+        <form action='<?php echo basename($_SERVER['PHP_SELF']) . "?" . $_SERVER['QUERY_STRING']; ?>' method='post' name='comment'>
+            <label for='comment' class='required'>Your message</label>
+            <textarea name='comment' rows='10' tabindex='4' required='required'></textarea>
+            <input name='submit' type='submit' value='Submit comment' />
+        </form>
+    </div>";
 
-        <?php endif;?>
-        <?php include ('php/footer.php'); ?>
-    </body>
+    <?php endif;?>
+    <?php include ('php/footer.php'); ?>
+</body>
 </html>
 
 
