@@ -6,6 +6,8 @@ include_once ('php/includes/functions.php');
 
 sec_session_start();
 
+//$user_email = $_SESSION['email'];
+
 $projname = $_GET["projname"];
 $projname = urldecode($projname);
 
