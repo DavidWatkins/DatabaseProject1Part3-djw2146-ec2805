@@ -60,7 +60,7 @@
         </style>
     </head>
     <body>
-       
+<?php include('php/navbar.php');?>  
         <div class="container">
             <?php
                 $index = 0;
@@ -96,6 +96,6 @@
                 oci_close($conn);
             ?>
         </div>
-
+<?php include ('php/footer.php');?>
     </body>
 </html>
