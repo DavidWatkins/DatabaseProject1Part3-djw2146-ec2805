@@ -6,6 +6,11 @@ ini_set('display_errors', 'On');
 $db = "w4111b.cs.columbia.edu:1521/adb";
 $conn = oci_connect("djw2146", "dudedude", $db);
 
+if (!empty($_POST['like'])) {
+    $stmt = oci_parse($conn, "insert into likes (user_email, proj_name) values ('', '$projname')");
+    oci_execute($stmt, OCI_DEFAULT);
+   }
+
 if (!empty($_POST['comment'])) {
     $comment = $_POST['comment'];
     /*
@@ -145,7 +150,9 @@ $img_src = "images/1.png";
         $num_likes = oci_fetch_row($stmt);
         ?>  
         <h5>Likes: <?php echo $num_likes[0];?></h5>
-            <input type="button" onclick="" name="like" value="like"/>
+            <form action="" name="liked" method="post">
+            <input type="submit" name="like" value="like"/>
+</form>
         </div>
 
         <div id="support_requests" class="projinfo">

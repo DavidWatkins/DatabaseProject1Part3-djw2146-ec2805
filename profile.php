@@ -45,10 +45,12 @@ $profile_pic = $user[2];
             <ul> 
             <?php
 
-                $stmt = oci_parse($conn, "select projname from projects where email = '$email'");
+                $stmt = oci_parse($conn, "select projname from projects, users where projects.user_email = '$email'");
                 oci_execute($stmt, OCI_DEFAULT); 
             while ($owned_project = oci_fetch_row($stmt)) { 
-                echo "<li>" . $owned_project[0] . "</li>";
+                $param = 'project.php?projname=' . urlencode($owned_project[0]);
+
+                echo "<li><a href=$param>" . $owned_project[0] . "</a></li>";
             }
             ?>
             </ul>
