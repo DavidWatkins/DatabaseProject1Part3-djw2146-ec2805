@@ -23,7 +23,7 @@ if (!empty($error_msg)) {
 }
         ?>
 
-        <form class="form-4" action="<?php echo esc_url($_SERVER['PHP_SELF']); ?>" method="post" name="registration-form">
+        <form class="form-4" action="<?php echo esc_url($_SERVER['PHP_SELF']); ?>" method="post" name="registration-form" enctype="multipart/form-data">
             <h1>Register</h1>
             <p>
                 <label for="Name">Name</label>
@@ -44,12 +44,6 @@ if (!empty($error_msg)) {
             <p>
                 <label for="password">Confirm Password</label>
                 <input type="password" name='confirmpwd' id="confirmpwd" placeholder="Confirm Password">
-            </p>
-
-            <p>
-                <div style="color: 222222;">Choose Picture</div>
-                <input type="file" name="photopath" id="pc"   />
-                
             </p>
             <p>
                 <input type="submit" name="submit" value="Register"

@@ -1,11 +1,11 @@
 function regformhash(form, uid, school, email, password, conf) {
-    
-     // Check each field has a value
+
+    // Check each field has a value
     if (uid.value == ''         ||
-          email.value == ''     ||
-          password.value == ''  ||
-          school.value == ''    ||
-          conf.value == '') {
+        email.value == ''     ||
+        password.value == ''  ||
+        school.value == ''    ||
+        conf.value == '') {
 
         alert('You must provide all the requested details. Please try again');
         return false;
@@ -19,16 +19,20 @@ function regformhash(form, uid, school, email, password, conf) {
         form.username.focus();
         return false;
     }
-    
+
     //Check the School
-    
+
     if(school.value.toLowerCase != 'columbia' && school.value.toLowerCase != 'columbia university' &&
        school.value.toLowerCase != 'brown' && school.value.toLowerCase != 'brown university' &&
-       school.value.toLowerCase != 'harvard' && school.value.toLowerCase != 'yale university') {
-        alert('School must be Columbia, Harvard, or Brown.');
+       school.value.toLowerCase != 'harvard' && school.value.toLowerCase != 'harvard university' &&
+       school.value.toLowerCase != 'mit' && school.value.toLowerCase != 'massachusetts institute of technology' &&
+       school.value.toLowerCase != 'yale' && school.value.toLowerCase != 'yale university') {
+        alert('School must be Columbia, Harvard, Brown, Yale, or MIT.');
         form.school.focus();
         return false;
     }
+    
+    school.value = school.value.toLowerCase;
 
     // Check that the password is sufficiently long (min 6 chars)
     // The check is duplicated below, but this is included to give more
