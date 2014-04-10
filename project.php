@@ -9,7 +9,9 @@ sec_session_start();
 $user_email = $_SESSION['email'];
 
 $projname = $_GET["projname"];
+/*
 $projname = urldecode($projname);
+ */
 
 if (isset($_POST['liked'])) { 
     $stmt = oci_parse($mysqli, "insert into likes (user_email, projname) values ('$user_email', '$projname')");
