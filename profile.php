@@ -3,11 +3,11 @@ $email = $_GET["email"];
 ini_set('display_errors', 'On');
 $db = "w4111b.cs.columbia.edu:1521/adb";
 $conn = oci_connect("djw2146", "dudedude", $db);
-$stmt = oci_parse($conn, "select email, school, photo from users where username = '$email'");
+$stmt = oci_parse($conn, "select name, school, photo from users where email = '$email'");
 oci_execute($stmt, OCI_DEFAULT);
 $user = oci_fetch_row($stmt);
 $involved_projects = array("poker chips", "teapot");
-$email = $user[0];
+$name = $user[0];
 $school = $user[1];
 $profile_pic = $user[2];
 ?>
@@ -45,7 +45,7 @@ $profile_pic = $user[2];
             <ul>
             <?php
 
-                $stmt = oci_parse($conn, "select projname from projects where username = '$name'");
+                $stmt = oci_parse($conn, "select projname from projects where email = '$email'");
                 oci_execute($stmt, OCI_DEFAULT); 
             while ($owned_project = oci_fetch_row($stmt)) { 
                 echo "<li>" . $owned_project[0] . "</li>";
@@ -55,7 +55,7 @@ $profile_pic = $user[2];
             <h4>Involved Projects: </h4>
             <ul>
             <?php
-                $stmt = oci_parse($conn, "select projname from team_memberships where username = '$name'");
+                $stmt = oci_parse($conn, "select projname from team_memberships where user_email = '$email'");
                 oci_execute($stmt, OCI_DEFAULT); 
             while ($memberof_project = oci_fetch_row($stmt)) { 
                 echo "<li>" . $memberof_project[0] . "</li>";
@@ -65,7 +65,7 @@ $profile_pic = $user[2];
             <h4>Liked Projects: </h4>
             <ul>
             <?php
-                $stmt = oci_parse($conn, "select projname from likes where username = '$name'");
+                $stmt = oci_parse($conn, "select projname from likes where user_email = '$email'");
                 oci_execute($stmt, OCI_DEFAULT); 
             while ($liked_project = oci_fetch_row($stmt)) {
                 echo "<li>" . $liked_project[0] . "</li>";

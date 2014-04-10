@@ -67,7 +67,7 @@
                 ini_set('display_errors', 'On');
                 $db = "w4111b.cs.columbia.edu:1521/adb";
                 $conn = oci_connect("djw2146", "dudedude", $db);
-                $stmt = oci_parse($conn, "select projname, username from projects order by date_created desc"); 
+                $stmt = oci_parse($conn, "select projname, name, email from projects natural join users order by date_created desc"); 
                 oci_execute($stmt, OCI_DEFAULT);
                 while ($project = oci_fetch_row($stmt)) {
                    if($index % 3 == 0) {
@@ -77,7 +77,7 @@
                     echo "<div>";
                     echo "<a href='project.php?projname=$project[0]'>" . $project[0] . "</a>";
                     echo "<span class='spacer'></span><br />\nBy: ";
-                    echo "<a href='profile.php?email=$project[1]'>" .$project[1] . "</a>\n";
+                    echo "<a href='profile.php?email=$project[2]'>" .$project[1] . "</a>\n";
                     echo "</span></h6>\n";
                     echo "</div>";
                     echo "<img src=\"images/1.png\" />\n";
