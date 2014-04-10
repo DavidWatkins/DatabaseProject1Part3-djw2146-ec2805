@@ -253,7 +253,7 @@ if ($food_request) {
 
 
             <?php 
-$stmt = oci_parse($mysqli, "select description, role from support_requests natural join help_requests where percent_fulfilled = 1 and projname = '$projname'");
+$stmt = oci_parse($mysqli, "select description, role from support_requests natural join help_requests where percent_fulfilled >= 1 and projname = '$projname'");
 oci_execute($stmt, OCI_DEFAULT);
 $help_request = oci_fetch_row($stmt);
 if ($help_request) {
@@ -265,7 +265,7 @@ if ($help_request) {
     echo "</div>";
 }
 
-$stmt = oci_parse($mysqli, "select description, amount from support_requests natural join money_requests where percent_fulfilled = 1 and projname = '$projname'");
+$stmt = oci_parse($mysqli, "select description, amount from support_requests natural join money_requests where percent_fulfilled >= 1 and projname = '$projname'");
 oci_execute($stmt, OCI_DEFAULT);
 $money_request = oci_fetch_row($stmt);
 if ($money_request) {
@@ -277,7 +277,7 @@ if ($money_request) {
     echo "</div>";
 }
 
-$stmt = oci_parse($mysqli, "select description, item, quantity from support_requests natural join food_requests where percent_fulfilled = 1 and projname = '$projname'");
+$stmt = oci_parse($mysqli, "select description, item, quantity from support_requests natural join food_requests where percent_fulfilled >= 1 and projname = '$projname'");
 oci_execute($stmt, OCI_DEFAULT);
 $food_request = oci_fetch_row($stmt);
 if ($food_request) {
@@ -290,6 +290,23 @@ if ($food_request) {
     echo "Quantity: " . $food_request[2];
     echo "</div>";
 }
+
+$stmt = oci_parse($mysqli, "select description
+                            from support_requests
+                            where (projname NOT IN (select projname from help_requests)
+                            and projname NOT IN (SELECT projname FROM money_requests)
+                            AND projname NOT IN (SELECT projname FROM FOOD_REQUESTS)
+                            AND percent_fulfilled >= 1
+                            AND projname = '$projname')");
+oci_execute($stmt, OCI_DEFAULT);
+$other_request = oci_fetch_row($stmt);
+if ($other_request) {
+    echo "<h5>Other</h5>";
+    echo "<div>";
+    echo $other_request[0];
+    echo "</div>";
+}
+
             ?>
         </div>
         <div class="projinfo">
