@@ -12,6 +12,15 @@ $projname = $_GET["projname"];
 $projname = urldecode($projname);
 
 
+if(!empty($_POST['update'])) {
+    $update = $_POST['update'];
+    
+    $stid = oci_parse($mysqli, "INSERT INTO Updates (projname, content, timestamp) VALUES(:projname, :content, current_timestamp)");
+    oci_bind_by_name($stid, ':projname', $projname);
+    oci_bind_by_name($stid, ':content', $content);
+    $r = oci_execute($stid);  // executes and commits
+}
+
 if (!empty($_POST['comment'])) {
     $content = $_POST['comment'];
     $user_email = $_SESSION['email'];
@@ -61,7 +70,7 @@ oci_execute($stmt, OCI_DEFAULT);
 $owner = oci_fetch_row($stmt);
 $owner_name = $owner[0];
 $owner_email = $project[3];
-$img_src = "images/1.png";
+$img_src = "http://lorempixel.com/400/200";
 
 ?>
 
@@ -278,11 +287,24 @@ oci_execute($stmt, OCI_DEFAULT);
 while ($update = oci_fetch_row($stmt)) { 
     echo "<div class=\"update\">";
     echo "<p>$update[0]</p>";
-    echo "<p>" . $update[1]->load() . "</p>";//Update content
+    echo "<p>" . $update[1] . "</p>";//Update content
     echo "</div>";
 } 
             ?>
+
+
         </div>  <!-- updates -->
+        <?php if (login_check($mysqli) == true && $_SESSION['email'] = $owner_email) : ?>
+        <div id='respond' class='projinfo'>
+            <h3>Create an Update</h3>
+            <form action='<?php echo basename($_SERVER['PHP_SELF']) . "?" . $_SERVER['QUERY_STRING']; ?>' method='post' name='comment'>
+                <label for='update' class='required'>Update Message: </label>
+                <textarea name='update' rows='10' tabindex='4' required='required'></textarea>
+                <input name='submit' type='submit' value='Submit comment' />
+            </form>
+        </div>";
+
+        <?php endif;?>
 
         <div class="projinfo">
             <h3>Comments</h3>
