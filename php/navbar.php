@@ -1,6 +1,9 @@
 <?php
+ini_set('display_errors', 'On');
 include_once 'php/includes/db_connect.php';
 include_once 'php/includes/functions.php';
+
+sec_session_start();
 ?>
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
@@ -16,10 +19,14 @@ include_once 'php/includes/functions.php';
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 <li class="active"><a href="index.php">Projects</a></li>
-                <li class="active"><a href="profile.php?user_id">Dashboard</a></li>
-                <li class="active"><a href="php/logout.php">Logout</a></li>
-                <li class="active"><a href="login.php">Login</a></li>
-                <li class="active"><a href="register.php">Sign Up</a></li>
+                <?php if (login_check($mysqli) == true) : ?>
+                    <li class="active"><a href="profile.php?user_id">Your Profile</a></li>
+                    <li class="active"><a href="profile.php?user_id">Dashboard</a></li>
+                    <li class="active"><a href="php/includes/logout.php">Logout</a></li>
+                <?php else : ?>
+                    <li class="active"><a href="login.php">Login</a></li>
+                    <li class="active"><a href="register.php">Sign Up</a></li>
+                <?php endif; ?>
             </ul>
         </div>
     </div>

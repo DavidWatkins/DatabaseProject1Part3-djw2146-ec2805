@@ -2,8 +2,6 @@
 include_once 'php/includes/db_connect.php';
 include_once 'php/includes/functions.php';
 
-sec_session_start();
-
 if (login_check($mysqli) == true) {
     $logged = 'in';
 } else {

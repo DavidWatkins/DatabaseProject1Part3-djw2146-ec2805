@@ -1,5 +1,6 @@
 <?php
-include_once 'includes/functions.php';
+ini_set('display_errors', 'On');
+include_once 'functions.php';
 sec_session_start();
 
 // Unset all session values
@@ -18,4 +19,4 @@ setcookie(session_name(),
 
 // Destroy session
 session_destroy();
-header('Location: ../ index.php');
+header('Location: ../../index.php');
