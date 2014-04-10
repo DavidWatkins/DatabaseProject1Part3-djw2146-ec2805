@@ -193,7 +193,7 @@ if ($help_request) {
     echo "</div>"; 
 }
             ?>
-<?php if (login_check($mysqli) == true) : ?>
+<?php if ($help_request and login_check($mysqli)) : ?>
             <form action="" method="post"> 
                 <p><input type="submit" value="I'm interested" onclick="alert('Email the project owner to discuss the role.');"/></p>
             </form>
@@ -221,7 +221,8 @@ if ($money_request) {
     echo "</div>";
 }
 ?>
-<?php if (login_check($mysqli) == true) : ?>
+
+<?php if ($money_request and login_check($mysqli)) : ?>
             <form action="" method="post" name="money">
                 <p>Amount: $<input type="text" name="amount" /></p>
                 <p><input type="submit" value="Contribute" /></p></form>
@@ -243,7 +244,7 @@ if ($food_request) {
     echo "</div>";
 }
             ?>
-<?php if (login_check($mysqli) == true) : ?>
+<?php if ($food_request and login_check($mysqli)) : ?> 
             <form action="" name="food" method="post">
                 <p>Quantity: <input type="text" name="quantity" /></p>
                 <p><input type="submit" value="Contribute" /></p></form>
@@ -320,7 +321,7 @@ while ($update = oci_fetch_row($stmt)) {
                 </form>
             </div>";
 
-            <?php endif;?>
+            <?php endif; ?>
 
             <div class="projinfo">
                 <h3>Comments</h3>
