@@ -9,9 +9,6 @@ sec_session_start();
 $user_email = $_SESSION['email'];
 
 $projname = $_GET["projname"];
-/*
-$projname = urldecode($projname);
- */
 
 if (isset($_POST['liked'])) { 
     $stmt = oci_parse($mysqli, "insert into likes (user_email, projname) values ('$user_email', '$projname')");
@@ -339,7 +336,7 @@ while ($update = oci_fetch_row($stmt)) {
             <form action='<?php echo basename($_SERVER['PHP_SELF']) . "?" . $_SERVER['QUERY_STRING']; ?>' method='post' name='comment'>
                 <label for='update' class='required'>Update Message: </label>
                 <textarea name='update' rows='10' tabindex='4' required='required'></textarea>
-                <input name='submit' type='submit' value='Submit comment' />
+                <input name='submit' type='submit' value='Submit Update' />
             </form>
         </div>";
 
