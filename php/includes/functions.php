@@ -27,7 +27,7 @@ function sec_session_start() {
 function login($email, $password, $mysqli) {
     // Using prepared statements means that SQL injection is not possible.
 
-    $stmt = oci_parse($mysqli, "select email, password from USERS where email = '" . $email . "'");
+    $stmt = oci_parse($mysqli, "select email, trim(password) from USERS where email = '" . $email . "'");
     $r = oci_execute($stmt);    
 
     if ($r) {
@@ -37,7 +37,7 @@ function login($email, $password, $mysqli) {
         }
         $db_password = $user[1];
 
-        if($db_password == $password) {
+        if(!strcmp($db_password.trim(), $password.trim())) {
             $user_browser = $_SERVER['HTTP_USER_AGENT'];
             $_SESSION['email'] = $email;
             $_SESSION['password'] = $password;
@@ -46,16 +46,12 @@ function login($email, $password, $mysqli) {
         else {
             return false;
         }
-
-        if ($count > 0) {
-            // A user with this email address already exists
-            $error_msg .= '<p class="error">A user with this email address already exists.</p>';
-        }
     } 
     return false;
 }
 
 function login_check($mysqli) {
+
     // Check if all session variables are set
     if (isset($_SESSION['email'],
               $_SESSION['password'])) {
@@ -85,8 +81,8 @@ function login_check($mysqli) {
         } 
         return false;
     }
+    return false;
 }
-return false;
 
 function esc_url($url) {
 
