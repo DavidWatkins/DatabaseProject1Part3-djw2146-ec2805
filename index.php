@@ -37,15 +37,13 @@
                 -ms-transition: all 1s ease;
                 transition: all 1s ease;
             }
-            <!--
-            .project-view img:hover {
-                -webkit-filter: blur(5px);
-            }-->
+            
             .project-view h6 {
                 position: absolute;
                 top: 70%;
                 left: 0;
                 width: 100%;
+                z-index: 9;
             }
             .project-view h6 span{
                 color: white;
@@ -53,9 +51,11 @@
                 background: rgb(0, 0, 0); /* fallback color */
                 background: rgba(0, 0, 0, 0.7);
                 padding: 1px;
+                z-index: 9;
             }
             .project-view h2 span.spacer {
                 padding:0 5px;
+                z-index: 9;
             }
         </style>
     </head>
@@ -77,7 +77,7 @@
                     echo "<div>";
                     echo "<a href='project.php?projname=$project[0]'>" . $project[0] . "</a>";
                     echo "<span class='spacer'></span><br />\nBy: ";
-                    echo "<a href='profile.php?username=$project[1]'>" .$project[1] . "</a>\n";
+                    echo "<a href='profile.php?email=$project[1]'>" .$project[1] . "</a>\n";
                     echo "</span></h6>\n";
                     echo "</div>";
                     echo "<img src=\"images/1.png\" />\n";

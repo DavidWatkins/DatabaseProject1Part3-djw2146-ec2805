@@ -32,7 +32,7 @@ if (login_check($mysqli) == true) {
         }
         ?>
         
-        <form class="form-4" action="<?php echo esc_url($_SERVER['PHP_SELF']); ?>">
+        <form class="form-4" action="php/includes/process_login.php" method="post" name="login_form">
             <h1>Login</h1>
             <p>
                 <label for="email">Email</label>
@@ -45,7 +45,7 @@ if (login_check($mysqli) == true) {
 
             <p>
                 <input type="submit" name="submit" value="Login"
-                       onclick="formhash(this.form, this.form.password);">
+                       onclick="form.submit();">
             </p>       
         </form>
         

@@ -24,7 +24,8 @@ body {
 }
 
 .form-4 input[type=text],
-.form-4 input[type=password] {
+.form-4 input[type=password],
+.form-4 textarea {
     /* Size and position */
     width: 100%;
     padding: 8px 4px 8px 10px;

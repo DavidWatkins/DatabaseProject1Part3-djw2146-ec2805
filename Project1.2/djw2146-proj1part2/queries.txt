@@ -1,0 +1,29 @@
+COMSW4111
+Project 1.2
+David Watkins [djw2146]
+Emily Chen [ec2805]
+
+1. Which type of support request receives the most frequent contributions?
+
+SELECT counts.category, MAX(counts.categoryGroupSize)
+FROM {
+SELECT category, COUNT(*) AS categoryGroupSize
+FROM Contributions
+GROUPBY category
+} counts;
+
+2. How frequently is each project updated (average number updates per day)?
+
+SELECT projname, COUNT(*)/(SYSDATE-p.date_created)
+FROM Updates u, Projects p
+WHERE u.projname = p.projname
+GROUPBY projname;
+
+3. What is the average team size?
+
+SELECT AVG(teams.size)
+FROM {
+SELECT COUNT(*) as size
+FROM Team_memberships
+GROUPBY projname
+} teams;

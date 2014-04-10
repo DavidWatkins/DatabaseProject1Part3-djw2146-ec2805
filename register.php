@@ -1,4 +1,5 @@
 <?php
+ini_set('display_errors', 'On');
 include_once 'php/includes/register.inc.php';
 include_once 'php/includes/functions.php';
 ?>
@@ -23,27 +24,27 @@ if (!empty($error_msg)) {
 }
         ?>
 
-        <form class="form-4" action="<?php echo esc_url($_SERVER['PHP_SELF']); ?>">
+        <form class="form-4" action="<?php echo esc_url($_SERVER['PHP_SELF']); ?>" method="post" name="registration-form">
             <h1>Register</h1>
             <p>
                 <label for="Name">Name</label>
-                <input type="text" name="name" placeholder="Name">
+                <input type="text" name="name" id="name" placeholder="Name">
             </p>
             <p>
                 <label for="school">School</label>
-                <input type="text" name="school" placeholder="School">
+                <input type="text" name="school" id="school" placeholder="School">
             </p>
             <p>
                 <label for="email">Email</label>
-                <input type="text" name="email" placeholder="Email">
+                <input type="text" name="email" id="email" placeholder="Email">
             </p>
             <p>
                 <label for="password">Password</label>
-                <input type="password" name='password' placeholder="Password"> 
+                <input type="password" name='password' id="password" placeholder="Password">
             </p>
             <p>
                 <label for="password">Confirm Password</label>
-                <input type="password" name='confirmpwd' placeholder="Confirm Password"> 
+                <input type="password" name='confirmpwd' id="confirmpwd" placeholder="Confirm Password">
             </p>
 
             <p>
