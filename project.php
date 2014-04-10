@@ -1,8 +1,21 @@
 <?php
-$projname = $_GET["projname"];
 ini_set('display_errors', 'On');
 $db = "w4111b.cs.columbia.edu:1521/adb";
 $conn = oci_connect("djw2146", "dudedude", $db);
+
+if (!empty($_POST['amount'])) {
+    echo "amount";
+    $stmt = oci_parse($conn, "select email, description, date_created, user_email from projects where projname = '$projname'");
+    oci_execute($stmt, OCI_DEFAULT);
+}
+
+if (!empty($_POST['quantity'])) {
+    echo "quantity";
+    $stmt = oci_parse($conn, "select email, description, date_created, user_email from projects where projname = '$projname'");
+    oci_execute($stmt, OCI_DEFAULT);
+}
+
+$projname = $_GET["projname"];
 $stmt = oci_parse($conn, "select email, description, date_created, user_email from projects where projname = '$projname'");
 oci_execute($stmt, OCI_DEFAULT);
 $project = oci_fetch_row($stmt);
@@ -124,9 +137,13 @@ $img_src = "images/1.png";
             echo "Role: " . $help_request[2];
             echo "<br>";
             echo "Percent fulfilled: " . (100 * $help_request[1]);
-            echo "</div>";
+            echo "</div>"; 
             }
-
+?>
+<form action="" method="post"> 
+                <p><input type="submit" value="I'm interested" onclick="alert('Email the project owner to discuss the role.');"/></p>
+            </form>
+<?php
             $stmt = oci_parse($conn, "select description, amount, percent_fulfilled, IS_ALL_OR_NOTHING from support_requests natural join money_requests where percent_fulfilled < 1 and projname = '$projname'"); 
             oci_execute($stmt, OCI_DEFAULT);
             $money_request = oci_fetch_row($stmt);
@@ -148,7 +165,11 @@ $img_src = "images/1.png";
             echo "All or nothing? " . $is_all_nothing;
             echo "</div>";
             }
-
+?>
+<form action="" method="post" name="money">
+<p>Amount: $<input type="text" name="amount" /></p>
+<p><input type="submit" value="Contribute" /></p></form>
+<?php
             $stmt = oci_parse($conn, "select description, percent_fulfilled, item, quantity from support_requests natural join food_requests where percent_fulfilled < 1 and projname = '$projname'"); 
             oci_execute($stmt, OCI_DEFAULT);
             $food_request = oci_fetch_row($stmt);
@@ -164,7 +185,12 @@ $img_src = "images/1.png";
             echo "Percent fulfilled: " . (100 * $food_request[1]);
             echo "</div>";
             }
-?></div>
+?>
+<form action="" name="food" method="post">
+<p>Quantity: <input type="text" name="quantity" /></p>
+<p><input type="submit" value="Contribute" /></p></form>
+
+</div>
 
         <div id="support_requests" class="projinfo">
 <h4>Thanks to the contributors who are helping us get there:</h4>
