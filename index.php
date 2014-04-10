@@ -65,9 +65,9 @@
             <?php
                 $index = 0;
                 ini_set('display_errors', 'On');
-                $db = "w4111b.cs.columbia.edu:1521/adb";
-                $conn = oci_connect("djw2146", "dudedude", $db);
-                $stmt = oci_parse($conn, "select projname, name, users.email from projects, users where projects.user_email = users.email order by date_created desc"); 
+                include_once('php/includes/db_connect.php');
+                $stmt = oci_parse($mysqli, "select projname, name, users.email from projects, users where projects.user_email = users.email order by date_created desc"); 
+
                 oci_execute($stmt, OCI_DEFAULT);
                 $count = 0;
                 while ($project = oci_fetch_row($stmt)) {
@@ -75,17 +75,11 @@
                         echo "<div class=\"project-row\">";
                     }
                     echo "<div class=\"project-view\">\n<h6><span>";
-                    echo "<div>";
-                    $param = 'project.php?projname=' . urlencode($project[0]);
-                    echo "<a href=$param>" . $project[0] . "</a>";
+                    echo "<a href='project.php?projname=".urlencode($project[0])."'>" . $project[0] . "</a>";
                     echo "<span class='spacer'></span><br />\nBy: ";
-
                     echo "<a href='profile.php?email=$project[2]'>" .$project[1] . "</a>\n";
                     echo "</span></h6>\n";
-
-                    echo "</div>";
                     echo "<img src=\"http://lorempixel.com/400/".(200 + $count++)."/\" />\n";
-
                     echo "</div>";
                     if($index % 3 == 2) {
                         echo "</div>";
@@ -93,7 +87,7 @@
 
                     $index++;
                 }
-                oci_close($conn);
+                oci_close($mysqli);
             ?>
         </div>
 <?php include ('php/footer.php');?>
