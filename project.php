@@ -6,11 +6,23 @@ include_once ('php/includes/functions.php');
 
 sec_session_start();
 
+<<<<<<< HEAD
 $user_email = $_SESSION['email'];
 
+||||||| merged common ancestors
+//$user_email = $_SESSION['email'];
+
+=======
+$user_email = $_SESSION['email'];
+echo $user_email;
+>>>>>>> 4cee523aba5eb7a34f9e92b27765f776a74dd64e
 $projname = $_GET["projname"];
 $projname = urldecode($projname);
 
+if (isset($_POST['liked'])) { 
+    $stmt = oci_parse($mysqli, "insert into likes (user_email, projname) values ('$user_email', '$projname')");
+    oci_execute($stmt, OCI_DEFAULT);
+}
 
 if(!empty($_POST['update'])) {
     $update = $_POST['update'];
@@ -162,9 +174,13 @@ while ($pub_link = oci_fetch_row($stmt)) {
 $stmt = oci_parse($mysqli, "select count(*) from likes where projname = '$projname'");
 oci_execute($stmt, OCI_DEFAULT);
 $num_likes = oci_fetch_row($stmt);
-            ?>  
+?>
             <h5>Likes: <?php echo $num_likes[0];?></h5>
-            <input type="button" onclick="" name="like" value="like"/>
+<?php if (login_check($mysqli) == true) : ?>
+<form action="" name="likes" method="post">
+            <input type="submit" name="liked" value="like"/>
+</form>
+<?php endif;?>
         </div>
 
         <div id="support_requests" class="projinfo">
@@ -339,7 +355,19 @@ while ($comment = oci_fetch_row($stmt)) {
             </form>
         </div>";
 
+<<<<<<< HEAD
         <?php endif;?>
         <?php include ('php/footer.php'); ?>
     </body>
 </html>
+||||||| merged common ancestors
+    <?php endif;?>
+    <?php include ('php/footer.php'); ?>
+</body>
+</html>
+=======
+    <?php endif;?>
+    <?php include ('php/footer.php'); ?>
+</body>
+</html>
+>>>>>>> 4cee523aba5eb7a34f9e92b27765f776a74dd64e
