@@ -42,7 +42,7 @@ $profile_pic = $user[2];
             <h5>School: <?php echo $school;?></h5>
             <h5>Email: <?php echo $email;?></h5>
             <h4>Owned Projects: </h4>
-            <ul>
+            <ul> 
             <?php
 
                 $stmt = oci_parse($conn, "select projname from projects where email = '$email'");
@@ -51,7 +51,7 @@ $profile_pic = $user[2];
                 echo "<li>" . $owned_project[0] . "</li>";
             }
             ?>
-            </ul> 
+            </ul>
             <h4>Involved Projects: </h4>
             <ul>
             <?php
@@ -66,6 +66,16 @@ $profile_pic = $user[2];
             <ul>
             <?php
                 $stmt = oci_parse($conn, "select projname from likes where user_email = '$email'");
+                oci_execute($stmt, OCI_DEFAULT); 
+            while ($liked_project = oci_fetch_row($stmt)) {
+                echo "<li>" . $liked_project[0] . "</li>";
+            }
+            ?>
+            </ul>
+            <h4>Projects contributed to: </h4>
+            <ul>
+            <?php
+                $stmt = oci_parse($conn, "select projname from contributions where user_email = '$email'");
                 oci_execute($stmt, OCI_DEFAULT); 
             while ($liked_project = oci_fetch_row($stmt)) {
                 echo "<li>" . $liked_project[0] . "</li>";

@@ -1,10 +1,20 @@
 <?php
-$projname = "Awesome Project";
+$projname = $_GET["projname"];
+ini_set('display_errors', 'On');
+$db = "w4111b.cs.columbia.edu:1521/adb";
+$conn = oci_connect("djw2146", "dudedude", $db);
+$stmt = oci_parse($conn, "select email, description, date_created, user_email from projects where projname = '$projname'");
+oci_execute($stmt, OCI_DEFAULT);
+$project = oci_fetch_row($stmt);
+$project_email = $project[0];
+$project_desc = $project[1];
+$project_date = $project[2];
+$stmt = oci_parse($conn, "select name from users where email = '$project[3]'");
+oci_execute($stmt, OCI_DEFAULT);
+$owner = oci_fetch_row($stmt);
+$owner_name = $owner[0];
+$owner_email = $project[3];
 $img_src = "images/1.png";
-$pub_links = array("www.google.com", "www.yahoo.com", "www.bing.com");
-$likes = 4;
-$updates = array(array("Awesome Update", "10/22/2013", "So excited to get this project going"));
-$support_requests = array(array("ghe"));
 ?>
 
 <html>
@@ -73,19 +83,31 @@ $support_requests = array(array("ghe"));
                 <li><h3><?php echo $projname; ?></h3></li>
                 <li><img src="<?php echo $img_src; ?>" /></li>
             </ul>
-            <h5>Owner: <a href="profile.php?user=David%20Watkins">David Watkins</a></h5>
+            <?php echo "<h5>Owner: <a href='profile.php?email=$owner_email'>$owner_name</a></h5>";
+            echo "<h5>Contact: $project_email</h5>";
+            echo "<h5>Date created: $project_date</h5>";
+            echo "<h5>Description: $project_desc</h5>";
+            ?>
             <br />
-            <p>Publicity Links: </p>
+            <h5>Publicity Links: </h5>
             <ul>
-                <?php
-foreach($pub_links as $link) {
-    echo ('<li><a href=\"' . $link . '\">' . $link . '</a></li>');
-    echo "<br />";
-}
-                ?>
-            </ul>
+            <?php
+            $stmt = oci_parse($conn, "select website_name, url from publicity_links where projname = '$projname'");
+            oci_execute($stmt, OCI_DEFAULT);
+            while ($pub_link = oci_fetch_row($stmt)) {
+                echo "<li>$pub_link[0]: <a href='$pub_link'>$pub_link[1]</a></li>";
 
-            <h5>Likes: <?php echo $likes;?></h5><input type="button" onclick="" name="like" value="like"/>
+            }
+            ?>
+            </ul>
+        <?php
+        
+        $stmt = oci_parse($conn, "select count(*) from likes where projname = '$projname'");
+        oci_execute($stmt, OCI_DEFAULT);
+        $num_likes = oci_fetch_row($stmt);
+        ?>  
+        <h5>Likes: <?php echo $num_likes[0];?></h5>
+            <input type="button" onclick="" name="like" value="like"/>
         </div>
         
         <div class="projinfo">
