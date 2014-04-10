@@ -192,9 +192,11 @@ if ($help_request) {
     echo "</div>"; 
 }
             ?>
+<?php if (login_check($mysqli) == true) : ?>
             <form action="" method="post"> 
                 <p><input type="submit" value="I'm interested" onclick="alert('Email the project owner to discuss the role.');"/></p>
             </form>
+<?php endif;?>
             <?php
 $stmt = oci_parse($mysqli, "select description, amount, percent_fulfilled, IS_ALL_OR_NOTHING from support_requests natural join money_requests where percent_fulfilled < 1 and projname = '$projname'"); 
 oci_execute($stmt, OCI_DEFAULT);
@@ -217,11 +219,13 @@ if ($money_request) {
     echo "All or nothing? " . $is_all_nothing;
     echo "</div>";
 }
-            ?>
+?>
+<?php if (login_check($mysqli) == true) : ?>
             <form action="" method="post" name="money">
                 <p>Amount: $<input type="text" name="amount" /></p>
                 <p><input type="submit" value="Contribute" /></p></form>
-            <?php
+<?php endif;?>
+<?php
 $stmt = oci_parse($mysqli, "select description, percent_fulfilled, item, quantity from support_requests natural join food_requests where percent_fulfilled < 1 and projname = '$projname'"); 
 oci_execute($stmt, OCI_DEFAULT);
 $food_request = oci_fetch_row($stmt);
@@ -238,12 +242,13 @@ if ($food_request) {
     echo "</div>";
 }
             ?>
+<?php if (login_check($mysqli) == true) : ?>
             <form action="" name="food" method="post">
                 <p>Quantity: <input type="text" name="quantity" /></p>
                 <p><input type="submit" value="Contribute" /></p></form>
 
         </div>
-
+<?php endif;?>
         <div id="support_requests" class="projinfo">
             <h4>Thanks to the contributors who are helping us get there:</h4>
 
