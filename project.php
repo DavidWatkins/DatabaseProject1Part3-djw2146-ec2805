@@ -6,13 +6,6 @@ include_once ('php/includes/functions.php');
 
 sec_session_start();
 
-<<<<<<< HEAD
-$user_email = $_SESSION['email'];
-
-||||||| merged common ancestors
-//$user_email = $_SESSION['email'];
-
-=======
 $user_email = $_SESSION['email'];
 echo $user_email;
 >>>>>>> 4cee523aba5eb7a34f9e92b27765f776a74dd64e
@@ -355,19 +348,9 @@ while ($comment = oci_fetch_row($stmt)) {
             </form>
         </div>";
 
-<<<<<<< HEAD
         <?php endif;?>
         <?php include ('php/footer.php'); ?>
     </body>
 </html>
-||||||| merged common ancestors
-    <?php endif;?>
-    <?php include ('php/footer.php'); ?>
-</body>
-</html>
-=======
-    <?php endif;?>
-    <?php include ('php/footer.php'); ?>
-</body>
-</html>
->>>>>>> 4cee523aba5eb7a34f9e92b27765f776a74dd64e
+
+
