@@ -6,7 +6,7 @@ include_once ('php/includes/functions.php');
 
 sec_session_start();
 
-//$user_email = $_SESSION['email'];
+$user_email = $_SESSION['email'];
 
 $projname = $_GET["projname"];
 $projname = urldecode($projname);
@@ -14,7 +14,7 @@ $projname = urldecode($projname);
 
 if(!empty($_POST['update'])) {
     $update = $_POST['update'];
-    
+
     $stid = oci_parse($mysqli, "INSERT INTO Updates (projname, content, timestamp) VALUES(:projname, :content, current_timestamp)");
     oci_bind_by_name($stid, ':projname', $projname);
     oci_bind_by_name($stid, ':content', $update);
@@ -239,7 +239,8 @@ if ($food_request) {
         <div id="support_requests" class="projinfo">
             <h4>Thanks to the contributors who are helping us get there:</h4>
 
-            <?php
+
+            <?php 
 $stmt = oci_parse($mysqli, "select description, role from support_requests natural join help_requests where percent_fulfilled = 1 and projname = '$projname'");
 oci_execute($stmt, OCI_DEFAULT);
 $help_request = oci_fetch_row($stmt);
@@ -278,10 +279,10 @@ if ($food_request) {
     echo "</div>";
 }
             ?>
-        </div>
-        <div class="projinfo">
-            <h3>Updates</h3>
-            <?php
+            </div>
+            <div class="projinfo">
+                <h3>Updates</h3>
+                <?php
 $stmt = oci_parse($mysqli, "select timestamp, content from updates where projname = '$projname'");
 oci_execute($stmt, OCI_DEFAULT);
 while ($update = oci_fetch_row($stmt)) { 
@@ -290,25 +291,26 @@ while ($update = oci_fetch_row($stmt)) {
     echo "<p>" . $update[1] . "</p>";//Update content
     echo "</div>";
 } 
-            ?>
+                ?>
 
 
-        </div>  <!-- updates -->
-        <?php if (login_check($mysqli) == true && $_SESSION['email'] = $owner_email) : ?>
-        <div id='respond' class='projinfo'>
-            <h3>Create an Update</h3>
-            <form action='<?php echo basename($_SERVER['PHP_SELF']) . "?" . $_SERVER['QUERY_STRING']; ?>' method='post' name='comment'>
-                <label for='update' class='required'>Update Message: </label>
-                <textarea name='update' rows='10' tabindex='4' required='required'></textarea>
-                <input name='submit' type='submit' value='Submit comment' />
-            </form>
-        </div>";
 
-        <?php endif;?>
+            </div>  <!-- updates -->
+            <?php if ((login_check($mysqli) == true) && ($_SESSION['email'] == $owner_email)) : ?>
+            <div id='respond' class='projinfo'>
+                <h3>Create an Update - <?php echo $owner_email . " " . $user_email; ?></h3>
+                <form action='<?php echo basename($_SERVER['PHP_SELF']) . "?" . $_SERVER['QUERY_STRING']; ?>' method='post' name='comment'>
+                    <label for='update' class='required'>Update Message: </label>
+                    <textarea name='update' rows='10' tabindex='4' required='required'></textarea>
+                    <input name='submit' type='submit' value='Submit comment' />
+                </form>
+            </div>";
 
-        <div class="projinfo">
-            <h3>Comments</h3>
-            <?php
+            <?php endif;?>
+
+            <div class="projinfo">
+                <h3>Comments</h3>
+                <?php
 $stmt = oci_parse($mysqli, "select timestamp, content, user_email from comments where projname = '$projname'");
 oci_execute($stmt, OCI_DEFAULT);
 while ($comment = oci_fetch_row($stmt)) {
@@ -321,23 +323,23 @@ while ($comment = oci_fetch_row($stmt)) {
     echo "<a href='profile.php?email=$comment[2]'>$user[0]</a></p>";
     echo "</div>";
 }
-            ?>
-        </div>  <!-- Comments -->
+                ?>
+            </div>  <!-- Comments -->
 
-    </div>
+        </div>
 
 
-    <?php if (login_check($mysqli) == true) : ?>
-    <div id='respond' class='projinfo'>
-        <h3>Leave a Comment</h3>
-        <form action='<?php echo basename($_SERVER['PHP_SELF']) . "?" . $_SERVER['QUERY_STRING']; ?>' method='post' name='comment'>
-            <label for='comment' class='required'>Your message</label>
-            <textarea name='comment' rows='10' tabindex='4' required='required'></textarea>
-            <input name='submit' type='submit' value='Submit comment' />
-        </form>
-    </div>";
+        <?php if (login_check($mysqli) == true) : ?>
+        <div id='respond' class='projinfo'>
+            <h3>Leave a Comment</h3>
+            <form action='<?php echo basename($_SERVER['PHP_SELF']) . "?" . $_SERVER['QUERY_STRING']; ?>' method='post' name='comment'>
+                <label for='comment' class='required'>Your message</label>
+                <textarea name='comment' rows='10' tabindex='4' required='required'></textarea>
+                <input name='submit' type='submit' value='Submit comment' />
+            </form>
+        </div>";
 
-    <?php endif;?>
-    <?php include ('php/footer.php'); ?>
-</body>
+        <?php endif;?>
+        <?php include ('php/footer.php'); ?>
+    </body>
 </html>
