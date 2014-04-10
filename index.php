@@ -73,6 +73,7 @@
                 $conn = oci_connect("djw2146", "dudedude", $db);
                 $stmt = oci_parse($conn, "select projname, user_email from projects");
                 oci_execute($stmt, OCI_DEFAULT);
+                $count = 0;
                 while ($project = oci_fetch_row($stmt)) {
                    if($index % 3 == 0) {
                         echo "<div class=\"project-row\">";
@@ -82,7 +83,7 @@
                     echo "<span class='spacer'></span><br />\nBy: ";
                     echo "<a href='profile.php?email=$project[1]'>" .$project[1] . "</a>\n";
                     echo "</span></h6>\n";
-                    echo "<img src=\"images/1.png\" />\n";
+                    echo "<img src=\"http://lorempixel.com/400/".(200 + $count++)."/\" />\n";
                     echo "</div>";
                     if($index % 3 == 2) {
                         echo "</div>";
