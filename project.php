@@ -1,10 +1,58 @@
 <?php
-$projname = "Awesome Project";
+
+ini_set('display_errors', 'On');
+include_once('php/includes/db_connect.php');
+include_once ('php/includes/functions.php');
+
+sec_session_start();
+
+$projname = $_GET["projname"];
+$projname = urldecode($projname);
+
+
+if (!empty($_POST['comment'])) {
+    $comment = $_POST['comment'];
+}
+
+if (isset($_POST['amount'])) { 
+    $amount_contributed = $_POST['amount']; 
+    $stmt = oci_parse($mysqli, "select amount, percent_fulfilled from support_requests natural join money_requests where projname='$projname'");
+    oci_execute($stmt, OCI_DEFAULT);
+    $money_request_info = oci_fetch_row($stmt);
+    $money_requested = $money_request_info[0];
+    $money_fulfilled = $money_request_info[1];
+    $total_money = $amount_contributed + $money_requested * $money_fulfilled;
+    $updated_percent_fulfilled = $total_money / $money_requested;
+    $stmt = oci_parse($mysqli, "update support_requests set percent_fulfilled = $updated_percent_fulfilled where projname = '$projname' and category='money'");
+    oci_execute($stmt, OCI_DEFAULT);
+}
+
+if (isset($_POST['quantity'])) {
+    $quantity_contributed = $_POST['quantity'];
+    $stmt = oci_parse($mysqli, "select quantity, percent_fulfilled from support_requests natural join food_requests where projname = '$projname'");
+    oci_execute($stmt, OCI_DEFAULT);
+    $food_request_info = oci_fetch_row($stmt);
+    $food_requested = $food_request_info[0];
+    $food_fulfilled = $food_request_info[1];
+    $total_food = $quantity_contributed + $food_requested * $food_fulfilled;
+    $updated_percent_fulfilled = $total_food / $food_requested;
+    $stmt = oci_parse($mysqli, "update support_requests set percent_fulfilled = $updated_percent_fulfilled where projname = '$projname' and category='food'");
+    oci_execute($stmt, OCI_DEFAULT);
+}
+
+$stmt = oci_parse($mysqli, "select email, description, date_created, user_email from projects where projname = '$projname'");
+oci_execute($stmt, OCI_DEFAULT);
+$project = oci_fetch_row($stmt);
+$project_email = $project[0];
+$project_desc = $project[1];
+$project_date = $project[2];
+$stmt = oci_parse($mysqli, "select name from users where email = '$project[3]'");
+oci_execute($stmt, OCI_DEFAULT);
+$owner = oci_fetch_row($stmt);
+$owner_name = $owner[0];
+$owner_email = $project[3];
 $img_src = "images/1.png";
-$pub_links = array("www.google.com", "www.yahoo.com", "www.bing.com");
-$likes = 4;
-$updates = array(array("Awesome Update", "10/22/2013", "So excited to get this project going"));
-$support_requests = array(array());
+
 ?>
 
 <html>
@@ -25,16 +73,16 @@ $support_requests = array(array());
                 margin-left:15%;
                 padding: 5px;
             }
-            
+
             .projinfo ul {
                 display: inline;
                 list-style-type: none;
             }
-            
+
             .projinfo img {
                 height: 30%;
             }
-            
+
             .update {
                 background-color: #888888;
                 margin: 5px;
@@ -73,69 +121,191 @@ $support_requests = array(array());
                 <li><h3><?php echo $projname; ?></h3></li>
                 <li><img src="<?php echo $img_src; ?>" /></li>
             </ul>
-            <h5>Owner: <a href="profile.php?user=David%20Watkins">David Watkins</a></h5>
+            <?php echo "<h5>Owner: <a href='profile.php?email=$owner_email'>$owner_name</a></h5>";
+echo "<h5>Contact: $project_email</h5>";
+echo "<h5>Date created: $project_date</h5>";
+echo "<h5>Description: $project_desc</h5>";
+            ?>
             <br />
-            <p>Publicity Links: </p>
+            <h5>Publicity Links: </h5>
             <ul>
                 <?php
-foreach($pub_links as $link) {
-    echo ('<li><a href=\"' . $link . '\">' . $link . '</a></li>');
-    echo "<br />";
+$stmt = oci_parse($mysqli, "select website_name, url from publicity_links where projname = '$projname'");
+oci_execute($stmt, OCI_DEFAULT);
+while ($pub_link = oci_fetch_row($stmt)) {
+    echo "<li>$pub_link[0]: <a href='$pub_link'>$pub_link[1]</a></li>";
+
 }
                 ?>
             </ul>
-
-            <h5>Likes: <?php echo $likes;?></h5><input type="button" onclick="" name="like" value="like"/>
-        </div>
-        
-        <div class="projinfo">
-            <h3>Updates</h3>
             <?php
-                foreach($updates as $update) {
-                    echo "<div class=\"update\">";
-                    echo "<h5>" . $update[0] . " - " . $update[1] . "</h5>";//Name of update
-                    echo "<br />";
-                    echo $update[2];//Update content
-                    echo "</div>";
-                }
-            
-            ?>
-        
+
+$stmt = oci_parse($mysqli, "select count(*) from likes where projname = '$projname'");
+oci_execute($stmt, OCI_DEFAULT);
+$num_likes = oci_fetch_row($stmt);
+            ?>  
+            <h5>Likes: <?php echo $num_likes[0];?></h5>
+            <input type="button" onclick="" name="like" value="like"/>
         </div>
 
         <div id="support_requests" class="projinfo">
-            <h4>support requests</h4>
+            <h4>Get involved:</h4> 
             <?php
-                foreach($support_requests as $support_request) {
-                    echo "<div>";
-                    echo $support_request[0];
-                    echo "</div>";
-                }
+$stmt = oci_parse($mysqli, "select description, percent_fulfilled, role from support_requests natural join help_requests where percent_fulfilled < 1 and projname = '$projname'"); 
+oci_execute($stmt, OCI_DEFAULT);
+$help_request = oci_fetch_row($stmt);
+if ($help_request) {
+    echo "<h5>Help</h5>";
+    echo "<div>";
+    echo $help_request[0];
+    echo "<br>";
+    echo "Role: " . $help_request[2];
+    echo "<br>";
+    echo "Percent fulfilled: " . (100 * $help_request[1]);
+    echo "</div>"; 
+}
+            ?>
+            <form action="" method="post"> 
+                <p><input type="submit" value="I'm interested" onclick="alert('Email the project owner to discuss the role.');"/></p>
+            </form>
+            <?php
+$stmt = oci_parse($mysqli, "select description, amount, percent_fulfilled, IS_ALL_OR_NOTHING from support_requests natural join money_requests where percent_fulfilled < 1 and projname = '$projname'"); 
+oci_execute($stmt, OCI_DEFAULT);
+$money_request = oci_fetch_row($stmt);
+if ($money_request) {
+    echo "<h5>Money</h5>";
+    echo "<div>";
+    echo $money_request[0];
+    echo "<br>";
+    echo "$" . $money_request[1];
+    echo "<br>";
+    echo "Percent fulfilled: " . (100 * $money_request[2]);
+    echo "<br>";
+    if ($money_request[3])  {
+        $is_all_nothing = "yes";
+    }
+    else    {
+        $is_all_nothing = "no";
+    }
+    echo "All or nothing? " . $is_all_nothing;
+    echo "</div>";
+}
+            ?>
+            <form action="" method="post" name="money">
+                <p>Amount: $<input type="text" name="amount" /></p>
+                <p><input type="submit" value="Contribute" /></p></form>
+            <?php
+$stmt = oci_parse($mysqli, "select description, percent_fulfilled, item, quantity from support_requests natural join food_requests where percent_fulfilled < 1 and projname = '$projname'"); 
+oci_execute($stmt, OCI_DEFAULT);
+$food_request = oci_fetch_row($stmt);
+if ($food_request) {
+    echo "<h5>Food</h5>";
+    echo "<div>";
+    echo $food_request[0];
+    echo "<br>";
+    echo "Item: " . $food_request[2];
+    echo "<br>";
+    echo "Quantity: " . $food_request[3]; 
+    echo "<br>";
+    echo "Percent fulfilled: " . (100 * $food_request[1]);
+    echo "</div>";
+}
+            ?>
+            <form action="" name="food" method="post">
+                <p>Quantity: <input type="text" name="quantity" /></p>
+                <p><input type="submit" value="Contribute" /></p></form>
+
         </div>
 
-        <div id="respond" class="projinfo">
+        <div id="support_requests" class="projinfo">
+            <h4>Thanks to the contributors who are helping us get there:</h4>
 
-            <h3>Leave a Comment</h3>
+            <?php
+$stmt = oci_parse($mysqli, "select description, role from support_requests natural join help_requests where percent_fulfilled = 1 and projname = '$projname'");
+oci_execute($stmt, OCI_DEFAULT);
+$help_request = oci_fetch_row($stmt);
+if ($help_request) {
+    echo "<h5>Help</h5>";
+    echo "<div>";
+    echo $help_request[0];
+    echo "<br>";
+    echo "Role: " . $help_request[1];
+    echo "</div>";
+}
 
-            <form action="post_comment.php" method="post" id="commentform">
+$stmt = oci_parse($mysqli, "select description, amount from support_requests natural join money_requests where percent_fulfilled = 1 and projname = '$projname'");
+oci_execute($stmt, OCI_DEFAULT);
+$money_request = oci_fetch_row($stmt);
+if ($money_request) {
+    echo "<h5>Money</h5>";
+    echo "<div>";
+    echo $money_request[0];
+    echo "<br>";                                                                                                         
+    echo "$" . $money_request[1];
+    echo "</div>";
+}
 
-                <label for="comment_author" class="required">Your name</label>
-                <input type="text" name="comment_author" id="comment_author" value="" tabindex="1" required="required">
+$stmt = oci_parse($mysqli, "select description, item, quantity from support_requests natural join food_requests where percent_fulfilled = 1 and projname = '$projname'");
+oci_execute($stmt, OCI_DEFAULT);
+$food_request = oci_fetch_row($stmt);
+if ($food_request) {
+    echo "<h5>Help</h5>";
+    echo "<div>";
+    echo $food_request[0];
+    echo "<br>";
+    echo "Item: " . $food_request[1];
+    echo "<br>";
+    echo "Quantity: " . $food_request[2];
+    echo "</div>";
+}
+            ?>
+        </div>
+        <div class="projinfo">
+            <h3>Updates</h3>
+            <?php
+$stmt = oci_parse($mysqli, "select timestamp, content from updates where projname = '$projname'");
+oci_execute($stmt, OCI_DEFAULT);
+while ($update = oci_fetch_row($stmt)) { 
+    echo "<div class=\"update\">";
+    echo "<p>$update[0]</p>";
+    echo "<p>" . $update[1]->load() . "</p>";//Update content
+    echo "</div>";
+} 
+            ?>
+        </div>  <!-- updates -->
 
-                <label for="email" class="required">Your email;</label>
-                <input type="email" name="email" id="email" value="" tabindex="2" required="required">
+        <div class="projinfo">
+            <h3>Comments</h3>
+            <?php
+$stmt = oci_parse($mysqli, "select timestamp, content, user_email from comments where projname = '$projname'");
+oci_execute($stmt, OCI_DEFAULT);
+while ($comment = oci_fetch_row($stmt)) {
+    $stmt = oci_parse($mysqli, "select name from users where email = '$comment[2]'");
+    oci_execute($stmt, OCI_DEFAULT);
+    $user = oci_fetch_row($stmt);
+    echo "<div class=\"update\">";
+    echo "<p>$comment[0]</p>";
+    echo "<p>$comment[1]</p>";//comment content
+    echo "<a href='profile.php?email=$comment[2]'>$user[0]</a></p>";
+    echo "</div>";
+}
+            ?>
+        </div>  <!-- Comments -->
 
-                <label for="comment" class="required">Your message</label>
-                <textarea name="comment" id="comment" rows="10" tabindex="4"	 required="required"></textarea>
+    </div>
 
-                <-- comment_post_ID value hard-coded as 1 -->
-                    <input type="hidden" name="comment_post_ID" value="1" id="comment_post_ID" />
-                    <input name="submit" type="submit" value="Submit comment" />
 
-                </form>
+    <?php if (login_check($mysqli) == true) : ?>
+    <div id='respond' class='projinfo'>
+        <h3>Leave a Comment</h3>
+        <form action='' method='post' name='comment'>
+            <label for='comment' class='required'>Your message</label>
+            <textarea name='comment' rows='10' tabindex='4' required='required'></textarea>
+            <input name='submit' type='submit' value='Submit comment' onclick='return okayToSubmit(this.form)' />
+        </form>
+    </div>";
 
-            </div>
-
-            <?php include ('php/footer.php'); ?>
-        </body>
-    </html>
+    <?php endif;?>
+    <?php include ('php/footer.php'); ?>
+</body>
+</html>
