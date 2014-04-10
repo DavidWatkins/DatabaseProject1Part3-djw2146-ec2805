@@ -109,7 +109,106 @@ $img_src = "images/1.png";
         <h5>Likes: <?php echo $num_likes[0];?></h5>
             <input type="button" onclick="" name="like" value="like"/>
         </div>
-        
+
+        <div id="support_requests" class="projinfo">
+            <h4>Get involved:</h4> 
+            <?php
+            $stmt = oci_parse($conn, "select description, percent_fulfilled, role from support_requests natural join help_requests where percent_fulfilled < 1 and projname = '$projname'"); 
+            oci_execute($stmt, OCI_DEFAULT);
+            $help_request = oci_fetch_row($stmt);
+            if ($help_request) {
+            echo "<h5>Help</h5>";
+            echo "<div>";
+            echo $help_request[0];
+            echo "<br>";
+            echo "Role: " . $help_request[2];
+            echo "<br>";
+            echo "Percent fulfilled: " . (100 * $help_request[1]);
+            echo "</div>";
+            }
+
+            $stmt = oci_parse($conn, "select description, amount, percent_fulfilled, IS_ALL_OR_NOTHING from support_requests natural join money_requests where percent_fulfilled < 1 and projname = '$projname'"); 
+            oci_execute($stmt, OCI_DEFAULT);
+            $money_request = oci_fetch_row($stmt);
+            if ($money_request) {
+            echo "<h5>Money</h5>";
+            echo "<div>";
+            echo $money_request[0];
+            echo "<br>";
+            echo "$" . $money_request[1];
+            echo "<br>";
+            echo "Percent fulfilled: " . (100 * $money_request[2]);
+            echo "<br>";
+            if ($money_request[3])  {
+                $is_all_nothing = "yes";
+            }
+            else    {
+                $is_all_nothing = "no";
+            }
+            echo "All or nothing? " . $is_all_nothing;
+            echo "</div>";
+            }
+
+            $stmt = oci_parse($conn, "select description, percent_fulfilled, item, quantity from support_requests natural join food_requests where percent_fulfilled < 1 and projname = '$projname'"); 
+            oci_execute($stmt, OCI_DEFAULT);
+            $food_request = oci_fetch_row($stmt);
+            if ($food_request) {
+            echo "<h5>Food</h5>";
+            echo "<div>";
+            echo $food_request[0];
+            echo "<br>";
+            echo "Item: " . $food_request[2];
+            echo "<br>";
+            echo "Quantity: " . $food_request[3]; 
+            echo "<br>";
+            echo "Percent fulfilled: " . (100 * $food_request[1]);
+            echo "</div>";
+            }
+?></div>
+
+        <div id="support_requests" class="projinfo">
+<h4>Thanks to the contributors who are helping us get there:</h4>
+
+<?php
+            $stmt = oci_parse($conn, "select description, role from support_requests natural join help_requests where percent_fulfilled = 1 and projname = '$projname'");
+            oci_execute($stmt, OCI_DEFAULT);
+            $help_request = oci_fetch_row($stmt);
+            if ($help_request) {
+                echo "<h5>Help</h5>";
+                echo "<div>";
+                echo $help_request[0];
+                echo "<br>";
+                echo "Role: " . $help_request[1];
+                echo "</div>";
+            }
+
+            $stmt = oci_parse($conn, "select description, amount from support_requests natural join money_requests where percent_fulfilled = 1 and projname = '$projname'");
+            oci_execute($stmt, OCI_DEFAULT);
+            $money_request = oci_fetch_row($stmt);
+            if ($money_request) {
+                echo "<h5>Money</h5>";
+                echo "<div>";
+                echo $money_request[0];
+                echo "<br>";                                                                                                         
+                echo "$" . $money_request[1];
+                echo "</div>";
+            }
+
+        $stmt = oci_parse($conn, "select description, item, quantity from support_requests natural join food_requests where percent_fulfilled = 1 and projname = '$projname'");
+            oci_execute($stmt, OCI_DEFAULT);
+            $food_request = oci_fetch_row($stmt);
+            if ($food_request) {
+                echo "<h5>Help</h5>";
+                echo "<div>";
+                echo $food_request[0];
+                echo "<br>";
+                echo "Item: " . $food_request[1];
+                echo "<br>";
+                echo "Quantity: " . $food_request[2];
+                echo "</div>";
+            }
+?>
+</div>
         <div class="projinfo">
             <h3>Updates</h3>
             <?php
@@ -140,17 +239,8 @@ $img_src = "images/1.png";
                     echo "</div>";
                 }
             ?>
-        </div>  <!-- updates -->
+        </div>  <!-- Comments -->
 
-        <div id="support_requests" class="projinfo">
-            <h4>support requests</h4>
-            <?php
-                foreach($support_requests as $support_request) {
-                    echo "<div>";
-                    echo $support_request[0];
-                    echo "</div>";
-                }
-?>
         </div>
 
         <div id="respond" class="projinfo">
