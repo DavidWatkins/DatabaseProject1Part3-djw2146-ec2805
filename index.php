@@ -69,6 +69,7 @@
                 $conn = oci_connect("djw2146", "dudedude", $db);
                 $stmt = oci_parse($conn, "select projname, name, users.email from projects, users where projects.user_email = users.email order by date_created desc"); 
                 oci_execute($stmt, OCI_DEFAULT);
+                $count = 0;
                 while ($project = oci_fetch_row($stmt)) {
                    if($index % 3 == 0) {
                         echo "<div class=\"project-row\">";
@@ -81,8 +82,10 @@
 
                     echo "<a href='profile.php?email=$project[2]'>" .$project[1] . "</a>\n";
                     echo "</span></h6>\n";
+
                     echo "</div>";
-                    echo "<img src=\"images/1.png\" />\n";
+                    echo "<img src=\"http://lorempixel.com/400/".(200 + $count++)."/\" />\n";
+
                     echo "</div>";
                     if($index % 3 == 2) {
                         echo "</div>";
