@@ -8,7 +8,7 @@ sec_session_start();
 
 $user_email = $_SESSION['email'];
 echo $user_email;
->>>>>>> 4cee523aba5eb7a34f9e92b27765f776a74dd64e
+
 $projname = $_GET["projname"];
 $projname = urldecode($projname);
 
