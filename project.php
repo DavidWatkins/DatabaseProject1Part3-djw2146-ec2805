@@ -1,21 +1,32 @@
 <?php
+
+$projname = $_GET["projname"];
 ini_set('display_errors', 'On');
 $db = "w4111b.cs.columbia.edu:1521/adb";
 $conn = oci_connect("djw2146", "dudedude", $db);
 
-if (!empty($_POST['amount'])) {
-    echo "amount";
-    $stmt = oci_parse($conn, "select email, description, date_created, user_email from projects where projname = '$projname'");
+if (!empty($_POST['amount'])) { 
+    $amount_contributed = $_POST['amount']; 
+    $stmt = oci_parse($conn, "select amount, percent_fulfilled from support_requests natural join money_requests where projname='$projname'");
+    oci_execute($stmt, OCI_DEFAULT);
+    $money_request_info = oci_fetch_row($stmt);
+    $money_requested = $money_request_info[0];
+    $money_fulfilled = $money_request_info[1];
+    $total_money = $amount_contributed + $money_requested * $money_fulfilled;
+    $updated_percent_fulfilled = $total_money / $money_requested;
+    $stmt = oci_parse($conn, "update support_requests set percent_fulfilled = $updated_percent_fulfilled where projname = '$projname' and category='money'");
     oci_execute($stmt, OCI_DEFAULT);
 }
 
 if (!empty($_POST['quantity'])) {
     echo "quantity";
+    /*
+    $quantity_contributed = $_POST['quantity'];
     $stmt = oci_parse($conn, "select email, description, date_created, user_email from projects where projname = '$projname'");
     oci_execute($stmt, OCI_DEFAULT);
+     */
 }
 
-$projname = $_GET["projname"];
 $stmt = oci_parse($conn, "select email, description, date_created, user_email from projects where projname = '$projname'");
 oci_execute($stmt, OCI_DEFAULT);
 $project = oci_fetch_row($stmt);
