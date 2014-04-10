@@ -96,7 +96,6 @@ function okayToSubmit(form) {
     }
 
     if(okay) {
-        alert('hello');
         appendToForm();
         form.submit();
         return true;
