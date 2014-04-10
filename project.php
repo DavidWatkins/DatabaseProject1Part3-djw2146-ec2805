@@ -1,4 +1,5 @@
 <?php
+include_once('db_connect.php');
 include_once 'php/includes/functions.php';
 $projname = $_GET["projname"];
 ini_set('display_errors', 'On');
@@ -295,7 +296,7 @@ $img_src = "images/1.png";
 
 
 <?php
-    if (login_check($conn)) {
+    if (login_check($mysqli)) {
                 echo "
     <div id='respond' class='projinfo'>
         <h3>Leave a Comment</h3>
