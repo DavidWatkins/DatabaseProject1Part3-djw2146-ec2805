@@ -2,7 +2,10 @@
 include_once 'php/includes/db_connect.php';
 include_once 'php/includes/functions.php';
 
-sec_session_start();
+if(session_id() == '' || !isset($_SESSION)) {
+    sec_session_start();
+}
+
 ?>
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
