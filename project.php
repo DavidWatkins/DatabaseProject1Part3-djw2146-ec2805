@@ -13,7 +13,15 @@ $projname = urldecode($projname);
 
 
 if (!empty($_POST['comment'])) {
-    $comment = $_POST['comment'];
+    $content = $_POST['comment'];
+    $user_email = $_SESSION['email'];
+    //user_email, projname, content
+
+    $stid = oci_parse($mysqli, "INSERT INTO Comments(user_email, projname, content, timestamp) VALUES(:user_email, :projname, :content, current_timestamp)");
+    oci_bind_by_name($stid, ':user_email', $user_email);
+    oci_bind_by_name($stid, ':projname', $projname);
+    oci_bind_by_name($stid, ':content', $content);
+    $r = oci_execute($stid);  // executes and commits
 }
 
 if (isset($_POST['amount'])) { 
@@ -300,10 +308,10 @@ while ($comment = oci_fetch_row($stmt)) {
     <?php if (login_check($mysqli) == true) : ?>
     <div id='respond' class='projinfo'>
         <h3>Leave a Comment</h3>
-        <form action='' method='post' name='comment'>
+        <form action='<?php echo basename($_SERVER['PHP_SELF']) . "?" . $_SERVER['QUERY_STRING']; ?>' method='post' name='comment'>
             <label for='comment' class='required'>Your message</label>
             <textarea name='comment' rows='10' tabindex='4' required='required'></textarea>
-            <input name='submit' type='submit' value='Submit comment' onclick='return okayToSubmit(this.form)' />
+            <input name='submit' type='submit' value='Submit comment' />
         </form>
     </div>";
 

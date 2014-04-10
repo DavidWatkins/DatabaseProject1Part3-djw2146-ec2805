@@ -28,7 +28,6 @@ if (isset($_POST['name'], $_POST['email'], $_POST['school'], $_POST['password'])
     //
 
     $stmt = oci_parse($mysqli, "select email from USERS where email = '" . $email . "'");
-    //oci_bind_by_name($stmt, ':email', $email);
     $r = oci_execute($stmt);
 
     if ($r) {

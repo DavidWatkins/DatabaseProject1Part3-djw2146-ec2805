@@ -19,7 +19,7 @@ sec_session_start();
             <ul class="nav navbar-nav">
                 <li class="active"><a href="index.php">Projects</a></li>
                 <?php if (login_check($mysqli) == true) : ?>
-                    <li class="active"><a href="profile.php?user_id=<?php echo urlencode($_SESSION['email']);?>">Your Profile</a></li>
+                    <li class="active"><a href="profile.php?email=<?php echo urlencode($_SESSION['email']);?>">Your Profile</a></li>
                     <li class="active"><a href="create_project.php">New Project</a></li>
                     <li class="active"><a href="php/includes/logout.php">Logout</a></li>
                 <?php else : ?>

@@ -23,7 +23,7 @@ if (isset($_POST['ProjectName'], $_POST['email'], $_POST['ProjectDescription'], 
     $support_count = filter_input(INPUT_POST, 'support_count', FILTER_SANITIZE_STRING);
     $link_count = filter_input(INPUT_POST, 'link_count', FILTER_SANITIZE_STRING);
 
-    $stmt = oci_parse($mysqli, "select projname from projects where projname = '" . $name . "'");
+    $stmt = oci_parse($mysqli, "select projname from projects where projname = '" . $name . "' ");
     $r = oci_execute($stmt);
 
     if ($r) {
