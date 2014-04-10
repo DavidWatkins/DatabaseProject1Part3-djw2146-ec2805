@@ -45,7 +45,7 @@ $profile_pic = $user[2];
             <ul> 
             <?php
 
-                $stmt = oci_parse($conn, "select projname from projects, users where projects.user_email = '$email'");
+                $stmt = oci_parse($conn, "select projname from projects where projects.user_email = '$email'");
                 oci_execute($stmt, OCI_DEFAULT); 
             while ($owned_project = oci_fetch_row($stmt)) { 
                 $param = 'project.php?projname=' . urlencode($owned_project[0]);
@@ -60,7 +60,8 @@ $profile_pic = $user[2];
                 $stmt = oci_parse($conn, "select projname from team_memberships where user_email = '$email'");
                 oci_execute($stmt, OCI_DEFAULT); 
             while ($memberof_project = oci_fetch_row($stmt)) { 
-                echo "<li>" . $memberof_project[0] . "</li>";
+                $param = 'project.php?projname=' . urlencode($memberof_project[0]);
+                echo "<li><a href=$param>" . $memberof_project[0] . "</a></li>";
             }
             ?>
             </ul>
@@ -70,7 +71,8 @@ $profile_pic = $user[2];
                 $stmt = oci_parse($conn, "select projname from likes where user_email = '$email'");
                 oci_execute($stmt, OCI_DEFAULT); 
             while ($liked_project = oci_fetch_row($stmt)) {
-                echo "<li>" . $liked_project[0] . "</li>";
+                $param = 'project.php?projname=' . urlencode($liked_project[0]);
+                echo "<li><a href=$param>" . $liked_project[0] . "</a></li>";
             }
             ?>
             </ul>
@@ -79,8 +81,9 @@ $profile_pic = $user[2];
             <?php
                 $stmt = oci_parse($conn, "select projname from contributions where user_email = '$email'");
                 oci_execute($stmt, OCI_DEFAULT); 
-            while ($liked_project = oci_fetch_row($stmt)) {
-                echo "<li>" . $liked_project[0] . "</li>";
+            while ($contr = oci_fetch_row($stmt)) {
+                $param = 'project.php?projname=' . urlencode($contr[0]);
+                echo "<li><a href=$param>" . $contr[0] . "</a></li>";
             }
             ?>
             </ul>
