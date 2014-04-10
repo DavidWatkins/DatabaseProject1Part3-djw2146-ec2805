@@ -1,8 +1,8 @@
 <?php 
+ini_set('display_errors', 'On');
 include_once('php/includes/create_project.inc.php');
-include_once('db_connect.php'); 
+include_once('php/includes/db_connect.php'); 
 include_once('php/includes/functions.php'); 
-sec_session_start(); 
 ?>
 
 <html>
@@ -11,7 +11,6 @@ sec_session_start();
 
         <script src="javascripts/jquery-2.1.0.min.js"></script>
         <script type="text/javascript" src="javascripts/bootstrap.js"></script>
-        <script type="text/javascript" src="javascripts/create_project.js"></script>
         <link rel="stylesheet" type="text/css" href="stylesheets/default.css" />
         <link rel="stylesheet" type="text/css" href="stylesheets/forms.css" />
         <link rel="stylesheet" type="text/css" href="stylesheets/bootstrap-theme.css" />
@@ -20,6 +19,11 @@ sec_session_start();
     </head>
     <body>
         <?php include ('php/navbar.php'); ?>
+        <script>
+            var user_email = "<?php echo $_SESSION['email']; ?>";
+ 
+        </script>
+        <script type="text/javascript" src="javascripts/create_project.js"></script>
         <?php if (login_check($mysqli) == true) : ?>
 
         <div id="output">
@@ -31,7 +35,7 @@ if (!empty($error_msg)) {
         </div>
 
         <div class="container">
-            <form class="form-4" action="<?php echo esc_url($_SERVER['PHP_SELF']); ?>">
+            <form class="form-4" action="<?php echo esc_url($_SERVER['PHP_SELF']); ?>" method="post" name="create_project"> 
                 <h1>Create Project</h1>
 
                 <!--name, email, description-->
@@ -49,21 +53,21 @@ if (!empty($error_msg)) {
                     <label for="ProjectDescription">Project Description</label>
                     <textarea name="ProjectDescription" id='ProjectDescription' placeholder="Enter a description for the project..." rows="5" cols="50"></textarea>
                 </p>
-                
+
                 <br />
-                
+
                 <h5>Food Support Request</h5>
                 <p>
-                    <textarea name="FSRDescription" placeholder="Enter a description for the Support Request" rows="5" cols="50"></textarea>
+                    <textarea name="FSRDescription" id="FSRDescription" placeholder="Enter a description for the Support Request" rows="5" cols="50"></textarea>
                 </p>
                 <p>
-                    <input type="text" name='supportRequestItem' placeholder='Food Item' />
+                    <input type="text" name='FSRItem' id='FSRItem' placeholder='Food Item' />
 
                 </p>
                 <p>
-                    <input type="text" name='supportRequestQuantity' placeholder='Food Quantity' />
+                    <input type="text" name='FSRQuantity' id='FSRQuantity' placeholder='Food Quantity' />
                 </p>
-                
+
                 <br />
 
                 <h5>Help Support Request</h5>
@@ -71,9 +75,9 @@ if (!empty($error_msg)) {
                     <textarea name="HSRDescription" placeholder="Enter a description for the Support Request" rows="5" cols="50"></textarea>
                 </p>
                 <p>
-                    <input type="text" name='supportRequestRole' placeholder='Role of Individual' />
+                    <input type="text" name='HSRRole' id='HSRRole' placeholder='Role of Individual' />
                 </p>
-                
+
                 <br />
 
                 <h5>Money Support Request</h5>
@@ -81,15 +85,15 @@ if (!empty($error_msg)) {
                     <textarea name="MSRDescription" placeholder="Enter a description for the Support Request" rows="5" cols="50"></textarea>
                 </p>
                 <p>
-                    <input type="text" name='supportRequestAmount' placeholder='Amount of Money' />
+                    <input type="text" name='MSRAmount' id='MSRAmount' placeholder='Amount of Money' />
                 </p>
                 <p> Is this request all or nothing, or is do you want to receive all money that is donated </p> 
                 <p>
-                    <input type="radio" name="all_or_nothing" + support_count + "" id="all_or_nothing" + support_count + "" value="yes" /> Yes
+                    <input type="radio" name="all_or_nothing" id="all_or_nothing" value="yes" /> Yes
                     <br />
-                    <input type="radio" name="all_or_nothing" + support_count + "" id="all_or_nothing" + support_count + "" value="no" /> No
+                    <input type="radio" name="all_or_nothing" id="all_or_nothing" value="no" /> No
                 </p>
-                
+
                 <br />
 
                 <h5>Other Support Request</h5>
@@ -109,7 +113,7 @@ if (!empty($error_msg)) {
 
                 <p>
                     <input type="submit" name="submit" value="Create Project"
-                           onclick="return okayToSubmit();">
+                           onclick="return okayToSubmit(this.form)">
                 </p>
             </form>
         </div>
