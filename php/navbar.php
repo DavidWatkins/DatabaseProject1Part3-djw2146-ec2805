@@ -1,5 +1,4 @@
 <?php
-ini_set('display_errors', 'On');
 include_once 'php/includes/db_connect.php';
 include_once 'php/includes/functions.php';
 
