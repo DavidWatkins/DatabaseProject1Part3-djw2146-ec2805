@@ -14,10 +14,10 @@ function sec_session_start() {
     // Gets current cookies params.
     $cookieParams = session_get_cookie_params();
     session_set_cookie_params($cookieParams["lifetime"],
-        $cookieParams["path"],
-        $cookieParams["domain"],
-        $secure,
-        $httponly);
+                              $cookieParams["path"],
+                              $cookieParams["domain"],
+                              $secure,
+                              $httponly);
     // Sets the session name to the one set above.
     session_name($session_name);
     session_start();            // Start the PHP session
@@ -26,136 +26,67 @@ function sec_session_start() {
 
 function login($email, $password, $mysqli) {
     // Using prepared statements means that SQL injection is not possible.
-    if ($stmt = $mysqli->prepare("SELECT id, username, password, salt
-        FROM members
-       WHERE email = ?
-        LIMIT 1")) {
-        $stmt->bind_param('s', $email);  // Bind "$email" to parameter.
-        $stmt->execute();    // Execute the prepared query.
-        $stmt->store_result();
 
-        // get variables from result.
-        $stmt->bind_result($user_id, $username, $db_password, $salt);
-        $stmt->fetch();
+    $stmt = oci_parse($mysqli, "select email, password from USERS where email = '" . $email . "'");
+    $r = oci_execute($stmt);    
 
-        // hash the password with the unique salt.
-        $password = hash('sha512', $password . $salt);
-        if ($stmt->num_rows == 1) {
-            // If the user exists we check if the account is locked
-            // from too many login attempts
-
-            if (checkbrute($user_id, $mysqli) == true) {
-                // Account is locked
-                // Send an email to user saying their account is locked
-                return false;
-            } else {
-                // Check if the password in the database matches
-                // the password the user submitted.
-                if ($db_password == $password) {
-                    // Password is correct!
-                    // Get the user-agent string of the user.
-                    $user_browser = $_SERVER['HTTP_USER_AGENT'];
-                    // XSS protection as we might print this value
-                    $user_id = preg_replace("/[^0-9]+/", "", $user_id);
-                    $_SESSION['user_id'] = $user_id;
-                    // XSS protection as we might print this value
-                    $username = preg_replace("/[^a-zA-Z0-9_\-]+/",
-                                                                "",
-                                                                $username);
-                    $_SESSION['username'] = $username;
-                    $_SESSION['login_string'] = hash('sha512',
-                              $password . $user_browser);
-                    // Login successful.
-                    return true;
-                } else {
-                    // Password is not correct
-                    // We record this attempt in the database
-                    $now = time();
-                    $mysqli->query("INSERT INTO login_attempts(user_id, time)
-                                    VALUES ('$user_id', '$now')");
-                    return false;
-                }
-            }
-        } else {
-            // No user exists.
+    if ($r) {
+        $user = oci_fetch_row($stmt);
+        if(!$user) {
             return false;
         }
-    }
-}
+        $db_password = $user[1];
 
-/*function checkbrute($user_id, $mysqli) {
-    // Get timestamp of current time
-    $now = time();
-
-    // All login attempts are counted from the past 2 hours.
-    $valid_attempts = $now - (2 * 60 * 60);
-
-    if ($stmt = $mysqli->prepare("SELECT time
-                             FROM login_attempts <code><pre>
-                             WHERE user_id = ?
-                            AND time > '$valid_attempts'")) {
-        $stmt->bind_param('i', $user_id);
-
-        // Execute the prepared query.
-        $stmt->execute();
-        $stmt->store_result();
-
-        // If there have been more than 5 failed logins
-        if ($stmt->num_rows > 5) {
+        if($db_password == $password) {
+            $user_browser = $_SERVER['HTTP_USER_AGENT'];
+            $_SESSION['email'] = $email;
+            $_SESSION['password'] = $password;
             return true;
-        } else {
+        }
+        else {
             return false;
         }
-    }
-}*/
+
+        if ($count > 0) {
+            // A user with this email address already exists
+            $error_msg .= '<p class="error">A user with this email address already exists.</p>';
+        }
+    } 
+    return false;
+}
 
 function login_check($mysqli) {
     // Check if all session variables are set
-    if (isset($_SESSION['user_id'],
-                        $_SESSION['username'],
-                        $_SESSION['login_string'])) {
+    if (isset($_SESSION['email'],
+              $_SESSION['password'])) {
 
-        $user_id = $_SESSION['user_id'];
-        $login_string = $_SESSION['login_string'];
-        $username = $_SESSION['username'];
+        $email = $_SESSION['email'];
+        $password = $_SESSION['password'];
 
         // Get the user-agent string of the user.
         $user_browser = $_SERVER['HTTP_USER_AGENT'];
 
-        if ($stmt = $mysqli->prepare("SELECT password
-                                      FROM members
-                                      WHERE id = ? LIMIT 1")) {
-            // Bind "$user_id" to parameter.
-            $stmt->bind_param('i', $user_id);
-            $stmt->execute();   // Execute the prepared query.
-            $stmt->store_result();
+        $stmt = oci_parse($mysqli, "select email, password from USERS where email = '" . $email . "'");
+        $r = oci_execute($stmt);
 
-            if ($stmt->num_rows == 1) {
-                // If the user exists get variables from result.
-                $stmt->bind_result($password);
-                $stmt->fetch();
-                $login_check = hash('sha512', $password . $user_browser);
-
-                if ($login_check == $login_string) {
-                    // Logged In!!!!
-                    return true;
-                } else {
-                    // Not logged in
-                    return false;
-                }
-            } else {
-                // Not logged in
+        if ($r) {
+            $user = oci_fetch_row($stmt);
+            if(!$user) {
                 return false;
             }
-        } else {
-            // Not logged in
-            return false;
-        }
-    } else {
-        // Not logged in
+            $db_password = $password;
+
+            if($db_password == $password) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        } 
         return false;
     }
 }
+return false;
 
 function esc_url($url) {
 
