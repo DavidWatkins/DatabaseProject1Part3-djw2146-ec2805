@@ -6,11 +6,15 @@ include_once ('php/includes/functions.php');
 
 sec_session_start();
 
-//$user_email = $_SESSION['email'];
-
+$user_email = $_SESSION['email'];
+echo $user_email;
 $projname = $_GET["projname"];
 $projname = urldecode($projname);
 
+if (isset($_POST['liked'])) { 
+    $stmt = oci_parse($mysqli, "insert into likes (user_email, projname) values ('$user_email', '$projname')");
+    oci_execute($stmt, OCI_DEFAULT);
+}
 
 if(!empty($_POST['update'])) {
     $update = $_POST['update'];
@@ -164,7 +168,9 @@ oci_execute($stmt, OCI_DEFAULT);
 $num_likes = oci_fetch_row($stmt);
             ?>  
             <h5>Likes: <?php echo $num_likes[0];?></h5>
-            <input type="button" onclick="" name="like" value="like"/>
+<form action="" name="likes" method="post">
+            <input type="submit" name="liked" value="like"/>
+</form>
         </div>
 
         <div id="support_requests" class="projinfo">
