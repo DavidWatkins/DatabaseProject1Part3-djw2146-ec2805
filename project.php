@@ -6,13 +6,21 @@ include_once ('php/includes/functions.php');
 
 sec_session_start();
 
-$user_email = $_SESSION['email'];
+if(isset($_SESSION['email']))
+    $user_email = $_SESSION['email'];
+else
+    $user_email = "";
 
 $projname = $_GET["projname"];
 
 if (isset($_POST['liked'])) { 
-    $stmt = oci_parse($mysqli, "insert into likes (user_email, projname) values ('$user_email', '$projname')");
+    $stmt = oci_parse($mysqli, "select count(*) from likes where projname = '$projname' AND user_email = '$user_email'");
     oci_execute($stmt, OCI_DEFAULT);
+    $num_likes = oci_fetch_row($stmt);
+    if($num_likes[0] == 0) {
+        $stmt = oci_parse($mysqli, "insert into likes (user_email, projname) values ('$user_email', '$projname')");
+        oci_execute($stmt, OCI_DEFAULT);
+    }
 }
 
 if(!empty($_POST['update'])) {
@@ -45,11 +53,21 @@ if (isset($_POST['amount'])) {
     $money_fulfilled = $money_request_info[1];
     $total_money = $amount_contributed + $money_requested * $money_fulfilled;
     $updated_percent_fulfilled = $total_money / $money_requested;
+    if($updated_percent_fulfilled > 1)
+        $updated_percent_fulfilled = 1;
     $stmt = oci_parse($mysqli, "update support_requests set percent_fulfilled = $updated_percent_fulfilled where projname = '$projname' and category='money'");
     oci_execute($stmt, OCI_DEFAULT);
+
+    $new = $amount_contributed / $money_requested;
+    if($new > 1 || $new < 0)
+        $new = 1;
+    $stid = oci_parse($mysqli, "INSERT INTO Contributions (user_email, projname, category, percent_fulfilled) VALUES(:user_email, :projname, 'food', $new)");
+    oci_bind_by_name($stid, ':projname', $projname);
+    oci_bind_by_name($stid, ':user_email', $user_email);
+    oci_execute($stid, OCI_DEFAULT);
 }
 
-if (isset($_POST['quantity'])) {
+if (isset($_POST['quantity']) && isset($_SESSION['email'])) {
     $quantity_contributed = $_POST['quantity'];
     $stmt = oci_parse($mysqli, "select quantity, percent_fulfilled from support_requests natural join food_requests where projname = '$projname'");
     oci_execute($stmt, OCI_DEFAULT);
@@ -58,8 +76,18 @@ if (isset($_POST['quantity'])) {
     $food_fulfilled = $food_request_info[1];
     $total_food = $quantity_contributed + $food_requested * $food_fulfilled;
     $updated_percent_fulfilled = $total_food / $food_requested;
+    if($updated_percent_fulfilled > 1)
+        $updated_percent_fulfilled = 1;
     $stmt = oci_parse($mysqli, "update support_requests set percent_fulfilled = $updated_percent_fulfilled where projname = '$projname' and category='food'");
     oci_execute($stmt, OCI_DEFAULT);
+
+    $new = $quantity_contributed / $food_requested;
+    if($new > 1 || $new < 0)
+        $new = 1;
+    $stid = oci_parse($mysqli, "INSERT INTO Contributions (user_email, projname, category, percent_fulfilled) VALUES(:user_email, :projname, 'food', $new)");
+    oci_bind_by_name($stid, ':projname', $projname);
+    oci_bind_by_name($stid, ':user_email', $_SESSION['email']);
+    oci_execute($stid, OCI_DEFAULT);
 }
 
 $stmt = oci_parse($mysqli, "select email, description, date_created, trim(user_email) from projects where projname = '$projname'");
@@ -165,9 +193,17 @@ while ($pub_link = oci_fetch_row($stmt)) {
 $stmt = oci_parse($mysqli, "select count(*) from likes where projname = '$projname'");
 oci_execute($stmt, OCI_DEFAULT);
 $num_likes = oci_fetch_row($stmt);
+
+$stmt2 = oci_parse($mysqli, "select count(*) from likes where projname = '$projname' AND user_email = '$user_email'");
+oci_execute($stmt2, OCI_DEFAULT);
+$num_user_likes = oci_fetch_row($stmt2);
             ?>
             <h5>Likes: <?php echo $num_likes[0];?></h5>
-            <?php if (login_check($mysqli) == true) : ?>
+            <?php if (login_check($mysqli) == true && $num_user_likes[0] > 0) : ?>
+            <form action="" name="likes" method="post">
+                <input type="submit" name="liked" value="liked" disabled="disabled" style="border-style:inset;"/>
+            </form>
+            <?php elseif (login_check($mysqli) == true) : ?>
             <form action="" name="likes" method="post">
                 <input type="submit" name="liked" value="like"/>
             </form>
@@ -261,30 +297,47 @@ if ($food_request) {
 $stmt = oci_parse($mysqli, "select description, role from support_requests natural join help_requests where percent_fulfilled >= 1 and projname = '$projname'");
 oci_execute($stmt, OCI_DEFAULT);
 $help_request = oci_fetch_row($stmt);
+$helpstmt = oci_parse($mysqli, "select user_email, percent_fulfilled from contributions where projname = '$projname' and category = 'help'");
+oci_execute($helpstmt, OCI_DEFAULT);
 if ($help_request) {
     echo "<h5>Help</h5>";
     echo "<div>";
     echo $help_request[0];
     echo "<br>";
     echo "Role: " . $help_request[1];
+    while(($helper = oci_fetch_row($helpstmt)) != null) {
+        echo "<br>";
+        echo $helper[0] . " helped: " . $helper[1] . "%<br>";
+    }
     echo "</div>";
 }
 
 $stmt = oci_parse($mysqli, "select description, amount from support_requests natural join money_requests where percent_fulfilled >= 1 and projname = '$projname'");
 oci_execute($stmt, OCI_DEFAULT);
 $money_request = oci_fetch_row($stmt);
+$moneystmt = oci_parse($mysqli, "select user_email, percent_fulfilled from contributions where projname = '$projname' and category = 'money'");
+oci_execute($moneystmt, OCI_DEFAULT);
 if ($money_request) {
     echo "<h5>Money</h5>";
     echo "<div>";
     echo $money_request[0];
     echo "<br>";                                                                                                         
     echo "$" . $money_request[1];
+    while(($helper = oci_fetch_row($moneystmt)) != null) {
+        echo "<br>";
+        $f1 = floatval($helper[1]);
+        $f2 = floatval($money_request[1]);
+        $mon = strval($f1*$f2);
+        echo $helper[0] . " contributed: $" . $mon . "<br>";
+    }
     echo "</div>";
 }
 
 $stmt = oci_parse($mysqli, "select description, item, quantity from support_requests natural join food_requests where percent_fulfilled >= 1 and projname = '$projname'");
 oci_execute($stmt, OCI_DEFAULT);
 $food_request = oci_fetch_row($stmt);
+$foodstmt = oci_parse($mysqli, "select user_email, percent_fulfilled from contributions where projname = '$projname' and category = 'food'");
+oci_execute($foodstmt, OCI_DEFAULT);
 if ($food_request) {
     echo "<h5>Help</h5>";
     echo "<div>";
@@ -293,6 +346,13 @@ if ($food_request) {
     echo "Item: " . $food_request[1];
     echo "<br>";
     echo "Quantity: " . $food_request[2];
+    while(($helper = oci_fetch_row($foodstmt))) {
+        echo "<br>";
+        $f1 = floatval($helper[1]);
+        $f2 = floatval($food_request[2]);
+        $fod = strval($f1*$f2);
+        echo $helper[0] . " contributed: " . $fod . " " . $food_request[1] . "(s)<br>";
+    }
     echo "</div>";
 }
 

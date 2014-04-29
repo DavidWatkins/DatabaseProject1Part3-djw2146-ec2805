@@ -7,6 +7,12 @@ if(session_id() == '' || !isset($_SESSION)) {
 }
 
 ?>
+
+<style>
+    background-image:url('images/skulls.png');
+    background-repeat:repeat-y;
+</style>
+
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
         <div class="navbar-header">
