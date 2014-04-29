@@ -32,6 +32,29 @@ if(!empty($_POST['update'])) {
     $r = oci_execute($stid);  // executes and commits
 }
 
+if(isset($_POST['new_member_email'])) {
+    $nmemberEmail = $_POST['new_member_email'];
+    $stmt = oci_parse($mysqli, "select count(*) from users where email='$nmemberEmail'");
+    oci_execute($stmt);
+    $temp = oci_fetch_row($stmt);
+    if($temp[0] == 0)
+        echo '<script language="javascript">alert("User does not exist");</script>';
+    else {
+        $stmt = oci_parse($mysqli, "select count(*) from team_memberships where user_email='$nmemberEmail' AND projname = '$projname'");
+        oci_execute($stmt);
+        $temp = oci_fetch_row($stmt);
+        if($temp[0] > 0)
+            echo '<script language="javascript">alert("User already member");</script>';
+        else {
+
+    $stid = oci_parse($mysqli, "INSERT INTO Team_memberships (projname, user_email) VALUES(:projname, :user_email)");
+    oci_bind_by_name($stid, ':projname', $projname);
+    oci_bind_by_name($stid, ':user_email', $nmemberEmail);
+    $r = oci_execute($stid);  // executes and commits
+        }
+    }
+}
+
 if (!empty($_POST['comment'])) {
     $content = $_POST['comment'];
     $user_email = $_SESSION['email'];
@@ -208,6 +231,28 @@ $num_user_likes = oci_fetch_row($stmt2);
                 <input type="submit" name="liked" value="like"/>
             </form>
             <?php endif;?>
+
+            <h4>The Team:</h4>
+            <ul>
+
+            <?php
+            $stmt = oci_parse($mysqli, "select user_email from Team_memberships where projname = '$projname'");
+            oci_execute($stmt);
+            while(($helper = oci_fetch_row($stmt))) {
+                $em = $helper[0];
+                echo '<li><a href=\'profile.php?email='.$em.'\'>'.$em.'</a></li>';
+            }
+            ?>
+                </ul>
+
+            <?php if (login_check($mysqli) == true && ($_SESSION['email'] == $owner_email)) : ?>
+            <br />
+            <form action="" name="team_membership" method="post">
+                <input type = "input" name = "new_member_email" />
+                <input type="submit" name="team_membership" value="Add member"/>
+                <br />
+            </form>
+            <?php endif; ?>
         </div>
 
         <div id="support_requests" class="projinfo">
